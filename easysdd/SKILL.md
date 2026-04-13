@@ -99,8 +99,9 @@ easysdd/
 8. **explore 文档单独归档**。`explores/` 是探索档案库,只放 easysdd-explore 产出的证据导向探索记录。explores 文档与 tricks 文档不混:前者是"这次探索看到了什么"(现状证据),后者是"同类问题推荐怎么做"(可复用处方);与 decisions 文档也不混:前者是分析输入,后者是拍板结论。
 9. **工具脚本统一放 `tools/`**。跨工作流共享的脚本都放在 `tools/` 下,不要散落在项目根目录或子工作流目录里。新增工具时同步在本节目录树登记。
 10. **Stage 0 brainstorm 也归属 feature 目录**。brainstorm note 就住在它所属 feature 的目录下(`brainstorm.md`),和 design/acceptance 聚合在一起——同一 feature 的所有 spec 产物一律同址。由于 brainstorm 开始时 feature slug 可能还没最终敲定,做法是:和用户商定一个**临时 slug**,按上文 `YYYY-MM-DD-{英文 slug}` 的格式拼出 feature 目录名(日期就取开 brainstorm 当天),然后以此创建 feature 目录。如果 design 阶段把后半段 slug 改了,**只改 slug、不改日期前缀**,连同 feature 目录一起重命名,brainstorm note 跟着走。严禁再往 `easysdd/brainstorms/` 这种并列目录塞文件。
-11. **新加子工作流 / 新产物类型**,默认在 `easysdd/` 下开新子目录,并在本节登记。不要往别处塞新东西,也不要只在子技能里加路径而不回中心登记。
+11. **新加子工作流 / 新产物类型**,默认在 `easysdd/` 下开新子目录,并在本节登记。不要往别处塞新东西,也不要只在子技能里加路径而不回中心登记。唯一例外见规则 13。
 12. **路径变更唯一源**:要改目录结构,先改本节的目录树和说明,其他地方自动跟随。
+13. **指南类产物（dev-guide / user-guide）输出到 `docs/`，不放在 `easysdd/` 下**。`easysdd-guidedoc` 产出的开发者指南和用户指南面向外部读者、随产品持续维护，应住在 `docs/dev/` 和 `docs/user/`（项目根级目录）。`easysdd/` 只放 spec 工件（方案 doc、验收报告、探索记录……）。如果项目已有其他 docs 目录约定，以项目约定为准，开始工作前先确认。
 
 ---
 
@@ -255,6 +256,24 @@ feature 的 `design.md`(标准流程与 fastforward 共用)统一要求带 YAML 
 
 **底层入口**:`easysdd-architecture-check` 子技能。
 
+### easysdd-guidedoc（文档写作，单工作流）
+
+适用于：**为项目编写（或更新）开发者指南和用户指南**。产物落到 `docs/` 目录（项目根级），独立于 spec 工件维护，面向外部读者，可随时发布。不绑定特定开发阶段，可在 feature-acceptance 后触发（主动推送），也可独立触发。
+
+| 轨道 | 目标读者 | 输出路径 |
+|---|---|---|
+| `dev-guide` | 贡献者、集成方 | `docs/dev/{slug}.md` |
+| `user-guide` | 终端用户 | `docs/user/{slug}.md` |
+
+**与其他工作流的关系**：
+
+- `easysdd-feature-acceptance` 结束后：方案 doc 有接口变更 → 推送"需要更新 dev-guide 吗？"；有用户可见行为变更 → 推送"需要更新 user-guide 吗？"
+- `easysdd-feature-design` 第 2 节（接口契约）是 dev-guide 的主要信息来源；第 1 节（用户可见行为）是 user-guide 的主要信息来源
+- `easysdd-architecture-check` 发现 design 与代码不一致时，同步标记对应 guide `status=outdated`
+- 使用 `search-yaml.py` 按 `doc_type`、`component`、`tags` 检索 `docs/` 目录，无需额外 coverage 清单
+
+**底层入口**：`easysdd-guidedoc` 子技能。
+
 ### (扩展位 — 未来子工作流挂在这里)
 
 > 用户后续会往 easysdd 里加更多子工作流(例如重构、迁移等)。新工作流定型后,把入口写进这一节,保持中心技能始终是"easysdd 全家福"的目录。
@@ -278,6 +297,7 @@ feature 的 `design.md`(标准流程与 fastforward 共用)统一要求带 YAML 
    - 记录技术选型 / 约束 / 架构决定 / 规约 → 触发 `easysdd-decisions` 技能
    - 沉淀知识 / 记录踩坑经历 → 触发 `easysdd-compound` 技能
    - 记录编程模式 / 库用法 / 技术技巧 → 触发 `easysdd-tricks` 技能
+   - 写/更新开发者指南 / 用户指南 → 触发 `easysdd-guidedoc` 技能
 2. **(如果是 easysdd-feature)目前手上已有哪些产物?**
 
 ### easysdd-onboarding 路由
@@ -303,6 +323,10 @@ feature 的 `design.md`(标准流程与 fastforward 共用)统一要求带 YAML 
 ### easysdd-architecture-check 路由
 
 触发 `easysdd-architecture-check` 子技能——它会先锁定单一检查目标(`design-internal` 或 `design-vs-code`),然后输出不一致清单和修复建议,不做实际修复。本技能不重复那份逻辑。
+
+### easysdd-guidedoc 路由
+
+触发 `easysdd-guidedoc` 子技能——它会先询问轨道（dev-guide / user-guide）和覆盖范围，搜索已有 guide 后起草或更新文档，用户 review 后落盘到 `docs/` 目录。本技能不重复那份逻辑。
 
 ---
 
