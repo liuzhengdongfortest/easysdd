@@ -55,7 +55,7 @@ easysdd/
 ### 组织规则
 
 1. **一个 feature = 一个 feature 目录**。同一 feature 的 brainstorm / design / acceptance 永远聚合在一起，不允许分散
-2. **brainstorm note 也归属 feature 目录**。Stage 0 开始时 slug 未定，先和用户商定临时 slug 建目录；Stage 1 design 如果改了 slug，只改 slug 不改日期前缀，整个目录一起重命名
+2. **brainstorm note 也归属 feature 目录**。Stage 0 开始时 slug 未定，AI 根据对话内容自拟临时 slug 并告知用户（用户有异议再改，不用专门确认）；Stage 1 design 如果改了 slug，只改 slug 不改日期前缀，整个目录一起重命名
 3. **feature 和 issue 的产物不要混**：`easysdd/features/` 和 `easysdd/issues/` 是并列的，不允许交叉存放
 
 ---

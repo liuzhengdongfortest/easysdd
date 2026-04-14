@@ -98,7 +98,7 @@ easysdd/
 7. **tricks 文档单独归档**。`tricks/` 是技巧参考库,只放 easysdd-tricks 产出的编程模式/库用法/技术技巧文档。tricks 文档与 learning 文档不混:前者是"要做 X 就这样做"(处方性),后者是"做完 X 发现了 Y"(回顾性);与 decisions 文档也不混:前者是可复用的操作技巧,后者是一次性做出的规范性决定。
 8. **explore 文档单独归档**。`explores/` 是探索档案库,只放 easysdd-explore 产出的证据导向探索记录。explores 文档与 tricks 文档不混:前者是"这次探索看到了什么"(现状证据),后者是"同类问题推荐怎么做"(可复用处方);与 decisions 文档也不混:前者是分析输入,后者是拍板结论。
 9. **工具脚本统一放 `tools/`**。跨工作流共享的脚本都放在 `tools/` 下,不要散落在项目根目录或子工作流目录里。新增工具时同步在本节目录树登记。
-10. **Stage 0 brainstorm 也归属 feature 目录**。brainstorm note 就住在它所属 feature 的目录下(`brainstorm.md`),和 design/acceptance 聚合在一起——同一 feature 的所有 spec 产物一律同址。由于 brainstorm 开始时 feature slug 可能还没最终敲定,做法是:和用户商定一个**临时 slug**,按上文 `YYYY-MM-DD-{英文 slug}` 的格式拼出 feature 目录名(日期就取开 brainstorm 当天),然后以此创建 feature 目录。如果 design 阶段把后半段 slug 改了,**只改 slug、不改日期前缀**,连同 feature 目录一起重命名,brainstorm note 跟着走。严禁再往 `easysdd/brainstorms/` 这种并列目录塞文件。
+10. **Stage 0 brainstorm 也归属 feature 目录**。brainstorm note 就住在它所属 feature 的目录下(`brainstorm.md`),和 design/acceptance 聚合在一起——同一 feature 的所有 spec 产物一律同址。由于 brainstorm 开始时 feature slug 可能还没最终敲定,做法是:AI 根据对话内容**自拟一个临时 slug**并告知用户,按上文 `YYYY-MM-DD-{英文 slug}` 的格式拼出 feature 目录名(日期就取开 brainstorm 当天),然后以此创建 feature 目录。用户有异议再改,不用专门确认一轮。如果 design 阶段把后半段 slug 改了,**只改 slug、不改日期前缀**,连同 feature 目录一起重命名,brainstorm note 跟着走。严禁再往 `easysdd/brainstorms/` 这种并列目录塞文件。
 11. **新加子工作流 / 新产物类型**,默认在 `easysdd/` 下开新子目录,并在本节登记。不要往别处塞新东西,也不要只在子技能里加路径而不回中心登记。唯一例外见规则 13。
 12. **路径变更唯一源**:要改目录结构,先改本节的目录树和说明,其他地方自动跟随。
 13. **指南类产物（dev-guide / user-guide）输出到 `docs/`，不放在 `easysdd/` 下**。`easysdd-guidedoc` 产出的开发者指南和用户指南面向外部读者、随产品持续维护，应住在 `docs/dev/` 和 `docs/user/`（项目根级目录）。`easysdd/` 只放 spec 工件（方案 doc、验收报告、探索记录……）。如果项目已有其他 docs 目录约定，以项目约定为准，开始工作前先确认。
