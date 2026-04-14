@@ -7,9 +7,7 @@ description: Feature 工作流阶段一：起草方案 doc（三层结构+测试
 
 ## 涉及的路径
 
-本技能在正文里用自然语言术语引用路径(**方案 doc**、**feature 目录**、**架构中心目录**、**架构总入口**、**架构索引**、**所有 feature 的方案 doc**)，具体目录位置见主技能 `easysdd` 第二节"目录安排"——那是整个 easysdd 家族目录约定的唯一定义处。
-
-> `{feature}` 是占位符，代表具体 feature 的**目录名**，格式是 `YYYY-MM-DD-{英文 slug}`（日期前缀用于排序，小写连字符 slug；详见主技能 `easysdd` 第二节"目录安排"）。到本阶段，feature 目录通常已由 brainstorm 阶段创建好；若不存在则在本阶段创建。
+> 路径约定见根技能 `easysdd` 第二节（组织规则 11）。`{feature}` 格式：`YYYY-MM-DD-{英文 slug}`。到本阶段，feature 目录通常已由 brainstorm 阶段创建好；若不存在则在本阶段创建。
 
 ## 你的职责
 
@@ -44,12 +42,15 @@ description: Feature 工作流阶段一：起草方案 doc（三层结构+测试
    - 架构总入口（项目级架构权威）
    - 架构索引（项目级架构 doc 索引）
    - 与用户需求相关的既有代码和架构中心目录下的子系统架构 doc
-4. **先搜技巧库目录**。运行：
-   - `python easysdd/tools/search-yaml.py --dir easysdd/tricks --filter status=active --query "{feature 关键词}"`
-5. **再搜探索归档目录**。运行：
-   - `python easysdd/tools/search-yaml.py --dir easysdd/explores --query "{feature 关键词}"`
+4. **归档检索（按需）**——仅当功能涉及的模块曾有归档记录时才搜（归档目录为空或与功能无关则跳过）：
+   - 技巧库目录：`python easysdd/tools/search-yaml.py --dir easysdd/tricks --filter status=active --query "{feature 关键词}"`
+   - 探索归档目录：`python easysdd/tools/search-yaml.py --dir easysdd/explores --query "{feature 关键词}"`
 
 命中后优先复用，并在方案 doc 记录引用来源。
+
+5. **断点恢复**。如果 `design.md` 已存在且有部分节内容：
+   - `status=draft` 且各节基本完整 → 上次写完了还没 review，跳到整体 review 步骤
+   - 部分节缺失 → 汇报"上次方案写到第 X 节，我补齐剩余节后统一给你 review"，只补缺失节，不重写已完成节
 
 ### 2) 一次性起草
 

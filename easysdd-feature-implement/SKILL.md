@@ -8,9 +8,7 @@ description: Feature 工作流阶段二：按方案 doc 分步实现代码，完
 
 ## 涉及的路径
 
-本技能在正文里用自然语言术语引用路径(**方案 doc**),具体目录位置见主技能 `easysdd` 第二节"目录安排"——那是整个 easysdd 家族目录约定的唯一定义处。
-
-> `{feature}` 是占位符,代表具体 feature 的**目录名**,格式是 `YYYY-MM-DD-{英文 slug}`(日期前缀用于排序,小写连字符 slug;详见主技能 `easysdd` 第二节"目录安排")。到本阶段,feature 目录已由 brainstorm 或 design 阶段创建好,这里只消费不新建。
+> 路径约定见根技能 `easysdd` 第二节（组织规则 11）。`{feature}` 格式：`YYYY-MM-DD-{英文 slug}`。到本阶段，feature 目录已由 brainstorm 或 design 阶段创建好。
 
 ## 你的职责
 
@@ -23,11 +21,20 @@ description: Feature 工作流阶段二：按方案 doc 分步实现代码，完
    - `feature` 字段与当前 feature 目录一致
    - `status=approved`
    - `summary` 非空,`tags` 至少 2 个
+
+   **标准 design（节编号 0/1/2/3/4）额外检查**:
    - 第 0 节(术语约定)有内容
    - 第 2 节(接口契约)有具体代码指针
    - 第 3 节(实现提示)里的改动计划已落到具体路径与函数
    - 第 3 节(实现提示)里的推进顺序步骤明确,有退出信号
    - **第 3 节(实现提示)里的测试设计按功能点覆盖,且每个功能点都包含测试约束/验证方式/用例骨架**
+
+   **Fastforward design（节编号 0/1/2/3）额外检查**:
+   - 第 0 节(需求摘要)含"明确不做"
+   - 第 1 节(设计方案)有改动点（代码指针：文件路径 + 函数/类型名）
+   - 第 2 节(验收标准)每条可验证（操作步骤 + 期待结果）
+   - 第 3 节(推进步骤)步骤明确,有退出信号
+
    - 任何一项不达标 → 停下来,告诉用户先走 easysdd-feature-design 补齐
 2. **checklist.yaml 存在且有效**。检查同 feature 目录下的 `checklist.yaml`:
    - 文件存在,且 `feature` 字段与当前 feature 目录一致
@@ -74,7 +81,11 @@ description: Feature 工作流阶段二：按方案 doc 分步实现代码，完
 {对照 checklist.yaml steps,逐条列出 action + exit_signal + status（应全部为 done）}
 
 ### 测试约束自检
+**标准 design**:
 {对照方案第 3 节测试设计,每个功能点的测试约束——当前实现是否满足?靠什么保证(类型系统 / 单测 / 集成 / 运行时 assert)?}
+
+**Fastforward design**:
+{对照方案第 2 节验收标准,逐条核对是否满足}
 ```
 
 汇报完后**停下来**等用户 review。用户提出修改意见后按意见修订,修订完再次发出简短确认,直到用户明确放行进入验收阶段。
@@ -122,7 +133,7 @@ description: Feature 工作流阶段二：按方案 doc 分步实现代码，完
 - [ ] `checklist.yaml` 的所有 steps 的 status 都已更新为 `done`
 - [ ] 完成汇报已输出,用户明确 review 通过
 - [ ] 没有违规信号未处理
-- [ ] 第 3 节测试设计里每个功能点的测试约束都有测试覆盖
+- [ ] 第 3 节测试设计里每个功能点的测试约束都有测试覆盖（fastforward 时对照第 2 节验收标准）
 - [ ] 没有"顺手发现"被偷偷修掉(都进了 issue 列表)
 - [ ] 没有方案外的文件改动(或改动已同步更新方案 doc)
 

@@ -111,6 +111,7 @@ easysdd/
 8. **新子工作流 / 新产物类型**默认在 `easysdd/` 下开新子目录并在本节登记。唯一例外见规则 9、10。
 9. **路径变更唯一源**：要改目录结构，先改本节。
 10. **面向外部读者的文档产物不放 `easysdd/`**。guidedoc 产物住 `docs/dev/` 和 `docs/user/`；libdoc 产物住 `docs/api/`。`easysdd/` 只放 spec 工件。如果项目已有其他 docs 目录约定，以项目约定为准。
+11. **子技能路径引用约定**。子技能正文用自然语言术语（方案 doc、feature 目录、架构总入口……），具体字面路径统一查本节目录树。子技能里不再重复解释"路径见主技能第二节"——这条规则本身就是默认约定。`{feature}` 和 `{issue}` 是占位符，格式见本节"目录树示意"下方。
 
 ---
 
@@ -200,6 +201,17 @@ easysdd/
 | 推翻既有模块重做架构 | 不在 easysdd-feature 范围，应独立写重构方案 doc |
 
 2. **如果是 feature** → 继续问"手上已有哪些产物？"，由 `easysdd-feature` 子技能接手路由。
+3. **如果是归档/沉淀类**，用下面的速判区分四个归档工作流：
+
+   ```
+   这条经验是不是在回顾某次具体事件？（"做 X 时发现了 Y"）
+   └─ 是 → easysdd-compound
+   └─ 不是 → 这是一个可复用的操作处方？（"要做 X 就这样做"）
+              └─ 是 → easysdd-tricks
+              └─ 不是 → 这是需要全项目遵守的规定/选型？（"以后都这样"）
+                         └─ 是 → easysdd-decisions
+                         └─ 不是 → 只是调查了一个问题，留个存档 → easysdd-explore
+   ```
 
 每个子技能持有自己的完整路由逻辑和退出条件，本技能只负责把用户送到正确入口，不重复子技能内容。
 
@@ -212,6 +224,7 @@ easysdd/
 ### 1. 文档是一等产物
 - spec doc 是交付物的一部分，代码交付时同步更新。"doc 以后再补" = 永远不补
 - 方案 doc 必须带 YAML frontmatter（`doc_type`、`feature`、`status`、`summary`、`tags`）
+- issue 文档（report / analysis / fix-note）也必须带 YAML frontmatter（`doc_type`、`issue`、`status`、`tags`），便于 `search-yaml.py` 检索
 
 ### 2. 术语锁定与防撞车
 - 引入新概念前 grep 既有代码 + 架构中心 + 已有方案 doc，确认无同名概念
@@ -230,8 +243,11 @@ easysdd/
 ### 6. UI 改动必须浏览器验证
 - 前端视觉/交互改动，验收阶段必须人工肉眼验证（`AGENTS.md` 硬要求）
 
-### 7. 开工前搜已有归档
-- `easysdd-feature-design`、`easysdd-issue-analyze`、`easysdd-issue-fix` 开始前，用 `search-yaml.py` 搜以下目录，优先复用已有记录：
+### 7. 开工前搜已有归档（按需，非必做）
+- `easysdd-feature-design`、`easysdd-issue-analyze`、`easysdd-issue-fix` 开始前，**先判断是否值得搜**：
+  - 功能/问题涉及的模块曾经出过 issue 或有已知 trick → 搜
+  - 全新模块、首次开发、归档目录为空 → 跳过，不浪费启动时间
+- 值得搜时，用 `search-yaml.py` **一次搜多个目录**，优先复用已有记录：
   - **技巧库**（`tricks/`）：可复用的模式或库用法
   - **探索归档**（`explores/`）：调用链、模块边界、历史结论
   - **知识沉淀**（`learnings/`）：历史踩坑记录
@@ -241,6 +257,28 @@ easysdd/
 
 ### 8. 不和 BUG 修复混路径
 - feature 工作流不处理 BUG，issue 工作流不做新功能。混路径会让 checkpoint 失效
+
+### 9. 收尾提交（scoped-commit）
+- 适用于 `easysdd-feature-acceptance` 和 `easysdd-issue-fix` 的收尾环节
+- **必须先问用户**："是否需要我把这次的代码和文档整理成一次 commit？"
+- 用户同意后：
+  1. `git status` 确认工作区改动
+  2. **只提交本次工作流相关文件**（功能/修复代码 + spec 文档 + 更新过的架构 doc）
+  3. 工作区混有无关改动且无法安全拆分时，停下来说明，不强行打包
+  4. 简短 commit 摘要（如 `feat: add xxx` / `fix: handle xxx`），确认后执行 `git add` + `git commit`
+  5. 告知用户 **commit hash + commit message**
+- 没有用户明确许可，不做 `git commit`
+- 优先把代码和对应 spec 文档放进同一次 commit，保证可追溯
+
+### 10. 断点恢复
+- AI 对话随时可能中断（token 超限、网络断开、用户换设备）。各阶段发现自己不是从零开始时，必须优先检查已有产物的完成度，从上次停下的地方继续：
+  - **brainstorm**：如 `brainstorm.md` 已有部分内容，读取后问用户"上次聊到 X，要接着聊还是推翻重来？"
+  - **design**：如 `design.md` 已有部分节，逐节检查完成度，补齐缺失节，不重写已完成节
+  - **implement**：`checklist.yaml` 中已 `done` 的步骤不重做，从第一个 `pending` 步骤开始
+  - **acceptance**：如 `acceptance.md` 已有部分节，检查哪些节已填写（有实质 checklist 勾选），从下一个未完成节继续
+  - **issue-analyze**：如 `analysis.md` 已存在，检查 5 节是否都有内容，缺失的补做，已有的不重写
+  - **issue-fix**：如代码已改但 `fix-note.md` 不存在，直接进入验证 + 写 fix-note 环节
+- 恢复时先向用户简短汇报："检测到上次工作到 X 阶段，我从 Y 继续"
 
 ---
 

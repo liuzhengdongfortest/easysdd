@@ -58,6 +58,7 @@ easysdd/
 1. **一个 issue = 一个 issue 目录**。同一问题的 report / analysis / fix-note 永远聚合在一起
 2. **fix-note.md 是阶段三的必出产物**。无论修复简单还是复杂,都要写 fix-note.md 记录实际采用方案、改动清单、验证结果和遗留事项。修复记录不再回填到 analysis.md
 3. **issue 目录不要和 feature 目录混**:`easysdd/issues/` 和 `easysdd/features/` 是并列的,不允许交叉
+4. **所有 issue 文档必须带 YAML frontmatter**。report.md（`doc_type: issue-report`）、analysis.md（`doc_type: issue-analysis`）、fix-note.md（`doc_type: issue-fix`）都必须有 YAML frontmatter，便于 `search-yaml.py` 按 severity、tags、status 等字段检索
 
 ---
 
