@@ -157,7 +157,7 @@ tags: [export, csv, orders]
 
 ---
 
-## 六、确认节奏
+## 六、确认与 checklist.yaml
 
 产出 `design.md` 后，向用户发出一次整体确认提示：
 
@@ -170,6 +170,13 @@ tags: [export, csv, orders]
 
 用户可以提修改意见，修订后再次确认；用户明确说"可以了"即视为放行，并把 frontmatter 的 `status` 更新为 `approved`。
 
+**确认后，立即从 design.md 提取行动清单，落盘为同目录下的 `checklist.yaml`**（格式见 easysdd-feature-design 技能的"checklist.yaml 格式"小节）。提取规则：
+
+- `steps`：从第 3 节"推进步骤"逐步提取
+- `checks`：从第 0 节"明确不做"项 + 第 2 节"验收标准"各条提取
+
+落盘后用 `validate-yaml.py --file {checklist.yaml 路径} --yaml-only` 校验语法。
+
 ---
 
 ## 七、退出条件
@@ -181,14 +188,15 @@ tags: [export, csv, orders]
 - [ ] 第 3 节推进步骤 ≤ 4 步，每步有退出信号
 - [ ] 用户明确确认
 - [ ] 用户确认后，frontmatter 的 `status` 已更新为 `approved`
+- [ ] `checklist.yaml` 已从 design.md 提取生成，且通过 `validate-yaml.py` 校验
 
-**文件路径**：`easysdd/features/{feature}/design.md`（feature 目录不存在就创建，命名格式 `YYYY-MM-DD-{英文 slug}`，日期前缀用今天的日期；目录约定见主技能 `easysdd` 第二节"目录安排"）
+**文件路径**：`easysdd/features/{feature}/design.md` 和 `easysdd/features/{feature}/checklist.yaml`（feature 目录不存在就创建，命名格式 `YYYY-MM-DD-{英文 slug}`，日期前缀用今天的日期；目录约定见主技能 `easysdd` 第二节"目录安排"）
 
 ---
 
 ## 八、退出后
 
-告诉用户："design.md 已确认，直接进入实现阶段。可以触发 `easysdd-feature-implement` 技能。"
+告诉用户："design.md 已确认，行动清单 `checklist.yaml` 已生成，直接进入实现阶段。可以触发 `easysdd-feature-implement` 技能。"
 
 不要自己顺手开始写代码——用户确认是硬约束。
 

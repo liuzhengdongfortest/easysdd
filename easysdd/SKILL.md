@@ -59,8 +59,9 @@ easysdd/
 │   └── {子系统架构 doc}.md
 ├── features/                   ← feature 聚合根
 │   └── {feature}/              ← feature 目录
-│       ├── brainstorm.md       ← brainstorm note(Stage 0,可选)
-│       ├── design.md           ← 方案 doc(含 YAML frontmatter + 测试设计)
+│       ├── brainstorm.md       ← brainstorm note（Stage 0，可选）
+│       ├── design.md           ← 方案 doc（含 YAML frontmatter + 测试设计）
+│       ├── checklist.yaml      ← 行动清单（design 阶段生成，implement/acceptance 更新 status）
 │       └── acceptance.md       ← 验收报告
 ├── issues/                     ← issue 聚合根
 │   └── {issue}/                ← issue 目录
@@ -90,332 +91,156 @@ easysdd/
 
 ### 组织规则
 
-1. **一个 feature = 一个 feature 目录**。同一 feature 的 brainstorm / design / acceptance 永远聚合在一起;
-2. **一个 issue = 一个 issue 目录**。同一问题的 report / analysis / fix-note 永远聚合在一起;
-3. **两类 doc 不要混**。`architecture/` 下是**项目架构权威**(长期存在),方案 doc 是**单功能方案**(短期,跟随 feature 生命周期)。两者通过方案 doc 第 8 节"与项目级架构文档的关系"连接。
-4. **feature 和 issue 的产物不要混**:`features/` 和 `issues/` 是并列的,不允许交叉存放。
-5. **learning 文档单独归档**。`learnings/` 是累积性知识库,只放 easysdd-compound 产出的坑点/知识文档;spec 产物(design/acceptance/report)不放进来,learning 文档也不放进 `features/` 或 `issues/`。
-6. **decisions 文档单独归档**。`decisions/` 是决策归档库,只放 easysdd-decisions 产出的技术选型/架构决定/约束/规约文档;已被取代(status=superseded)的文档保留不删,只加标注。decisions 文档与 learning 文档不混:前者是"我们决定了什么"(规范性),后者是"我们发现了什么"(经验性)。
-7. **tricks 文档单独归档**。`tricks/` 是技巧参考库,只放 easysdd-tricks 产出的编程模式/库用法/技术技巧文档。tricks 文档与 learning 文档不混:前者是"要做 X 就这样做"(处方性),后者是"做完 X 发现了 Y"(回顾性);与 decisions 文档也不混:前者是可复用的操作技巧,后者是一次性做出的规范性决定。
-8. **explore 文档单独归档**。`explores/` 是探索档案库,只放 easysdd-explore 产出的证据导向探索记录。explores 文档与 tricks 文档不混:前者是"这次探索看到了什么"(现状证据),后者是"同类问题推荐怎么做"(可复用处方);与 decisions 文档也不混:前者是分析输入,后者是拍板结论。
-9. **工具脚本统一放 `tools/`**。跨工作流共享的脚本都放在 `tools/` 下,不要散落在项目根目录或子工作流目录里。新增工具时同步在本节目录树登记。
-10. **Stage 0 brainstorm 也归属 feature 目录**。brainstorm note 就住在它所属 feature 的目录下(`brainstorm.md`),和 design/acceptance 聚合在一起——同一 feature 的所有 spec 产物一律同址。由于 brainstorm 开始时 feature slug 可能还没最终敲定,做法是:AI 根据对话内容**自拟一个临时 slug**并告知用户,按上文 `YYYY-MM-DD-{英文 slug}` 的格式拼出 feature 目录名(日期就取开 brainstorm 当天),然后以此创建 feature 目录。用户有异议再改,不用专门确认一轮。如果 design 阶段把后半段 slug 改了,**只改 slug、不改日期前缀**,连同 feature 目录一起重命名,brainstorm note 跟着走。严禁再往 `easysdd/brainstorms/` 这种并列目录塞文件。
-11. **新加子工作流 / 新产物类型**,默认在 `easysdd/` 下开新子目录,并在本节登记。不要往别处塞新东西,也不要只在子技能里加路径而不回中心登记。唯一例外见规则 13。
-12. **路径变更唯一源**:要改目录结构,先改本节的目录树和说明,其他地方自动跟随。
-13. **指南类产物（dev-guide / user-guide）输出到 `docs/`，不放在 `easysdd/` 下**。`easysdd-guidedoc` 产出的开发者指南和用户指南面向外部读者、随产品持续维护，应住在 `docs/dev/` 和 `docs/user/`（项目根级目录）。`easysdd/` 只放 spec 工件（方案 doc、验收报告、探索记录……）。如果项目已有其他 docs 目录约定，以项目约定为准，开始工作前先确认。
-14. **库 API 参考文档（libdoc）输出到 `docs/api/`，不放在 `easysdd/` 下**。`easysdd-libdoc` 产出的条目级参考文档和条目清单（`_manifest.yaml`）面向外部读者，应住在 `docs/api/`（项目根级目录）。与 guidedoc 的区别：guidedoc 是任务导向教程（how-to），libdoc 是参考导向文档（reference），两者互补不替代。如果项目已有其他 API 文档目录约定（`reference/`、`components/`），以项目约定为准。
+1. **一个 feature = 一个 feature 目录**。同一 feature 的 brainstorm / design / acceptance 永远聚合在一起。
+2. **一个 issue = 一个 issue 目录**。同一问题的 report / analysis / fix-note 永远聚合在一起。
+3. **两类 doc 不要混**。`architecture/` 是项目架构权威（长期），方案 doc 是单功能方案（短期），通过方案 doc 第 4 节连接。
+4. **feature 和 issue 的产物不要混**：`features/` 和 `issues/` 并列，不交叉存放。
+5. **归档目录各管各的，不混放**。每个归档目录只放对应子工作流的产物：
+
+   | 目录 | 产出工作流 | 性质 | 不混于 |
+   |---|---|---|---|
+   | `learnings/` | easysdd-compound | 经验性（"发现了什么"） | decisions、tricks |
+   | `decisions/` | easysdd-decisions | 规范性（"决定了什么"） | learnings、tricks |
+   | `tricks/` | easysdd-tricks | 处方性（"该怎么做"） | learnings、decisions |
+   | `explores/` | easysdd-explore | 证据性（"看到了什么"） | tricks、decisions |
+
+   spec 产物（design/acceptance/report）不放进任何归档目录。
+
+6. **工具脚本统一放 `tools/`**。新增工具时同步在第二节目录树登记。
+7. **brainstorm 归属 feature 目录**。AI 根据对话自拟临时 slug（格式 `YYYY-MM-DD-{slug}`），创建 feature 目录后放入 `brainstorm.md`。design 阶段改 slug 只改后半段，日期前缀不变。
+8. **新子工作流 / 新产物类型**默认在 `easysdd/` 下开新子目录并在本节登记。唯一例外见规则 9、10。
+9. **路径变更唯一源**：要改目录结构，先改本节。
+10. **面向外部读者的文档产物不放 `easysdd/`**。guidedoc 产物住 `docs/dev/` 和 `docs/user/`；libdoc 产物住 `docs/api/`。`easysdd/` 只放 spec 工件。如果项目已有其他 docs 目录约定，以项目约定为准。
 
 ---
 
 ## 三、目前包含的子工作流
 
-### easysdd-feature(新功能开发,可选 Stage 0 + 三个正式阶段)
+> 每个子工作流的完整操作手册、退出条件、与其他工作流的关系详见各自的子技能 SKILL.md。本节只做**定位索引**——一句话说清"干什么"、核心表格、底层入口，不重复子技能内容。
 
-适用于:**从零实现一个还没做过的功能,或在已有功能上加新的能力**。
+### easysdd-feature（新功能开发）
 
-| 阶段 | 子技能 | 主导者 | 产出 |
-|---|---|---|---|
-| ⓪ brainstorm(可选) | `easysdd-feature-brainstorm` | AI 做思考伙伴,用户拍板 | brainstorm note |
-| ① 方案设计(含测试设计) | `easysdd-feature-design` | AI 起草,用户整体 review 拍板 | 方案 doc(含 YAML frontmatter + 0 术语 + 1 决策与约束 + 2 接口契约 + 3 实现提示 + 4 架构关系) |
-| ② 分步实现 | `easysdd-feature-implement` | AI 按方案执行 | 代码 + 阶段汇报 |
-| ③ 验收闭环 | `easysdd-feature-acceptance` | AI 逐层核对方案,用户终审 | 验收报告 + 架构归并 + 收尾提交确认 |
+适用于：从零实现一个还没做过的功能，或在已有功能上加新的能力。
 
-> 术语对应的实际路径见第二节"目录安排"。本表只引用术语,不重复字面路径。
-
-**正式阶段(① ~ ③)不可跳、不可合并、不可并行**。每个阶段退出条件未满足,下一阶段不得开始。Stage 0 的"可选"是指它可以**不存在于某条路径上**,而不是可以"半路跳过";一旦开始走 Stage 0,就必须走到其退出条件才能进 Stage 1。
-
-feature 的 `design.md`(标准流程与 fastforward 共用)统一要求带 YAML frontmatter,便于 `search-yaml.py` 检索。必填字段: `doc_type: feature-design`、`feature`、`status`(`draft` / `approved` / `superseded`)、`summary`、`tags`; 初稿生成时写 `draft`,用户明确放行后改成 `approved`。
-
-**底层入口**:`easysdd-feature` 子技能(含路由表、Stage 0 判断逻辑、目录规则)。
-
-### easysdd-issue(问题修复,三个阶段)
-
-适用于:**项目里发现的 BUG、异常行为、文档错误等——即"本来应该好的东西坏了"**。
-
-**标准路径**(根因不明或问题复杂):
-
-| 阶段 | 子技能 | 主导者 | 产出 |
-|---|---|---|---|
-| ① 问题报告 | `easysdd-issue-report` | 用户描述,AI 引导结构化 | 问题报告(`report.md`) |
-| ② 根因分析 | `easysdd-issue-analyze` | AI 读代码分析,用户确认 | 根因分析(`analysis.md`) |
-| ③ 修复验证 | `easysdd-issue-fix` | AI 定点修复,用户验证 | 代码修复 + 修复记录(`fix-note.md`) + 收尾提交确认 |
-
-**快速通道**(根因一眼确定、改动范围很小):AI 读代码 → 告知根因 → 用户确认 → 修复 → 用户验证 → 仅写 `fix-note.md`
-
-**与 easysdd-feature 的边界**:
-
-- issue 工作流处理"坏了的东西";feature 工作流处理"新加的东西"
-- 如果修复过程中发现需要新增能力才能真正解决问题,先走完 issue 工作流存档,再另开 feature 工作流——不在 issue 里做新功能
-- easysdd-feature 实现阶段发现的"顺手发现"记录,进入 easysdd-issue 工作流处理,不在 feature PR 里偷偷修
-
-**底层入口**:`easysdd-issue` 子技能(含路由表和目录规则)。
-
-### easysdd-compound(知识沉淀,单工作流)
-
-适用于:**任何非 trivial 的工程实践结束后——将踩过的坑、发现的最佳实践提炼为可检索文档**。不绑定特定阶段,可在 feature 或 issue 工作流结束后触发,也可独立触发。
-
-| 轨道 | 适用情境 | 产出 |
+| 阶段 | 子技能 | 产出 |
 |---|---|---|
-| 坑点轨道(Pitfall) | BUG 修复、调试经历、环境陷阱 | `learnings/YYYY-MM-DD-{slug}.md`(track: pitfall) |
-| 知识轨道(Knowledge) | 最佳实践、工作流改进、可复用模式 | `learnings/YYYY-MM-DD-{slug}.md`(track: knowledge) |
+| ⓪ brainstorm（可选） | `easysdd-feature-brainstorm` | brainstorm note |
+| ① 方案设计 | `easysdd-feature-design` | 方案 doc（含 YAML frontmatter） |
+| ② 分步实现 | `easysdd-feature-implement` | 代码 + 阶段汇报 |
+| ③ 验收闭环 | `easysdd-feature-acceptance` | 验收报告 + 架构归并 |
 
-**与其他工作流的关系**:
+正式阶段不可跳、不可合并、不可并行。方案 doc 统一带 YAML frontmatter（必填：`doc_type`、`feature`、`status`、`summary`、`tags`）。底层入口：`easysdd-feature` 子技能。
 
-- `easysdd-feature-acceptance` 结束时,AI 应主动提议运行一次 easysdd-compound
-- `easysdd-issue-fix` 结束时,AI 应主动提议把这次的坑记录为 pitfall 文档
-- `easysdd-feature-design` 和 `easysdd-issue-analyze` 阶段,主动 Grep 知识沉淀目录查有无历史记录可复用
+### easysdd-issue（问题修复）
 
-**底层入口**:`easysdd-compound` 子技能(含两轨道格式、五个阶段、守护规则)。
+适用于：BUG、异常行为、文档错误——"本来应该好的东西坏了"。
 
-### easysdd-decisions(决策归档,单工作流)
-
-适用于:**将项目中已经拍板的技术选型、架构决定、长期约束和编码规约归档为可检索文档**。不绑定特定开发阶段,可独立触发,也可在 feature-design 或 issue-analyze 阶段做出重要决策后顺带触发。
-
-| 类型 | 适用情境 | 产出 |
+| 阶段 | 子技能 | 产出 |
 |---|---|---|
-| `tech-stack` | 技术/库/框架的选型 | `decisions/YYYY-MM-DD-{slug}.md` |
-| `architecture` | 系统结构、模块划分、数据流方向 | `decisions/YYYY-MM-DD-{slug}.md` |
-| `constraint` | 硬约束——某些事情不允许做 | `decisions/YYYY-MM-DD-{slug}.md` |
-| `convention` | 软规约——某些事情统一这样做 | `decisions/YYYY-MM-DD-{slug}.md` |
+| ① 问题报告 | `easysdd-issue-report` | `report.md` |
+| ② 根因分析 | `easysdd-issue-analyze` | `analysis.md` |
+| ③ 修复验证 | `easysdd-issue-fix` | 代码修复 + `fix-note.md` |
 
-**与其他工作流的关系**:
+根因一眼确定时可走快速通道（直接修复 + 仅写 `fix-note.md`）。issue 处理"坏了的东西"，feature 处理"新加的东西"，不混。底层入口：`easysdd-issue` 子技能。
 
-- `easysdd-feature-design` 开始前:搜索决策归档目录,确认方案不违反已有约束
-- `easysdd-feature-design` 结束后:如果设计中做出了超出单个 feature 影响范围的重要选择,推荐记录进决策归档
-- `easysdd-issue-analyze` 开始前:搜索决策归档目录,有时"这里为什么这么做"的答案就在里面
-- `easysdd-compound` vs `easysdd-decisions`:compound 记录的是"发现了什么坑/最佳实践"(经验性);decisions 记录的是"我们决定了什么"(规范性)。互不替代
+### easysdd-compound（知识沉淀）
 
-**底层入口**:`easysdd-decisions` 子技能。
+适用于：将踩过的坑、最佳实践提炼为可检索文档。两条轨道：Pitfall（坑点）和 Knowledge（知识）。底层入口：`easysdd-compound` 子技能。
 
-### easysdd-onboarding(仓库接入,单工作流)
+### easysdd-decisions（决策归档）
 
-适用于:**把一个新仓库或有零散文档的仓库接入 easysdd 体系**——搭起标准骨架,并把已有文档归位。不绑定任何开发阶段,是开始用 easysdd 之前的"环境准备"步骤。
+适用于：将已拍板的技术选型、架构决定、约束、规约归档。四种类型：`tech-stack` / `architecture` / `constraint` / `convention`。底层入口：`easysdd-decisions` 子技能。
 
-| 路径 | 适用情况 | 产出 |
-|---|---|---|
-| 绿地路径 | 仓库内无任何 spec 类文档,`easysdd/` 不存在 | 完整的 `easysdd/` 目录骨架 + 骨架文件 |
-| 迁移路径 | 已有零散文档、`docs/` 目录、架构文档,或部分 `easysdd/` 结构 | 审计报告 + 迁移映射方案(用户逐一确认)+ 落盘 |
+### easysdd-onboarding（仓库接入）
 
-**与其他工作流的关系**:onboarding 是前置步骤,完成后才能顺畅运行 feature / issue / compound 工作流。已经跑通 easysdd 的仓库不需要再运行 onboarding。
+适用于：把新仓库或有零散文档的仓库接入 easysdd 体系。两条路径：绿地（从零建骨架）和迁移（审计归位）。底层入口：`easysdd-onboarding` 子技能。
 
-**底层入口**:`easysdd-onboarding` 子技能。
+### easysdd-tricks（技巧库）
 
-### easysdd-tricks(技巧库,单工作流)
+适用于：将可复用的编程模式、库用法、技术技巧整理为可检索文档。三种类型：`pattern` / `library` / `technique`。底层入口：`easysdd-tricks` 子技能。
 
-适用于:**将可复用的编程模式、库/框架用法、技术技巧整理为可检索文档**。不绑定特定开发阶段,可在任意时间主动写入,也可在 feature-design 或 issue-analyze 阶段顺带触发。
+### easysdd-explore（探索归档）
 
-| 文档类型 | 适用情境 | 产出 |
-|---|---|---|
-| `pattern` | 设计模式、架构模式、编程惯用法 | `tricks/YYYY-MM-DD-{slug}.md` |
-| `library` | 某个库/框架的用法、配置方式、常见坑 | `tricks/YYYY-MM-DD-{slug}.md` |
-| `technique` | 具体操作技巧、工具用法、命令配方 | `tricks/YYYY-MM-DD-{slug}.md` |
+适用于：对代码仓做定向探索并把结果归档。三种类型：`question` / `module-overview` / `spike`。底层入口：`easysdd-explore` 子技能。
 
-**YAML frontmatter 必填字段**:`type`(上表三选一)、`topic`(一句话描述做什么)、`tags`(可检索标签列表)、`status`(`active` / `superseded`)。`language` 或 `framework` 字段按需加。`search-yaml.py` 可按任意字段检索。
+### easysdd-architecture-check（架构一致性检查）
 
-**与其他工作流的关系**:
+适用于：检查 design 内部是否自洽（`design-internal`），或 design 与代码是否一致（`design-vs-code`）。每次只检查一个目标，只报告不修复。底层入口：`easysdd-architecture-check` 子技能。
 
-- `easysdd-feature-design` 开始前:搜索技巧库目录,看有无相关模式或库用法可直接参考
-- `easysdd-issue-analyze` 开始前:搜索技巧库目录,有时根因正是某个库的已知坑或用法误区
-- `easysdd-tricks` vs `easysdd-compound`:compound 记录"这次工作踩了什么坑/学到了什么"(事件锚定、回顾性);tricks 记录"要做这类事该怎么做"(问题锚定、处方性)。同一次工程实践可以同时产出两类文档
-- `easysdd-tricks` vs `easysdd-decisions`:tricks 是可复用操作技巧(how);decisions 是一次性规范决定(what/must)。互不替代
+### easysdd-guidedoc（文档写作）
 
-**底层入口**:`easysdd-tricks` 子技能。
+适用于：编写或更新开发者指南（`dev-guide` → `docs/dev/`）和用户指南（`user-guide` → `docs/user/`）。底层入口：`easysdd-guidedoc` 子技能。
 
-### easysdd-explore(探索归档,单工作流)
+### easysdd-libdoc（库 API 参考文档）
 
-适用于:**仓库新人或上下文不足时,先对代码仓做定向探索并把结果归档**。例如用户说"先帮我 explore 一下"、"我想问这个仓库里 X 是怎么做的"、"把这次探索结论存档"。
+适用于：为库的公开表面逐条目生成结构化参考文档（→ `docs/api/`），带条目清单追踪。底层入口：`easysdd-libdoc` 子技能。
 
-| 文档类型 | 适用情境 | 产出 |
-|---|---|---|
-| `question` | 围绕一个问题做证据收集与结论 | `explores/YYYY-MM-DD-{slug}.md` |
-| `module-overview` | 新人快速理解某个模块边界与调用关系 | `explores/YYYY-MM-DD-{slug}.md` |
-| `spike` | 对多个实现方向做轻量技术探查(不拍板) | `explores/YYYY-MM-DD-{slug}.md` |
-
-**与其他工作流的关系**:
-
-- `easysdd-feature-design` 开始前:先搜索探索归档目录,吸收已有代码阅读结论,减少重复探索
-- `easysdd-issue-analyze` 开始前:先搜索探索归档目录,很多调用链与模块边界信息可直接复用
-- `easysdd-issue-fix` 开始前:搜索探索归档目录,确认修复点和历史探索证据一致,避免误改
-- `easysdd-explore` vs `easysdd-tricks`:explore 是"现状证据"(as-is),tricks 是"推荐做法"(to-be)
-- `easysdd-explore` vs `easysdd-decisions`:explore 产出用于支持讨论,decisions 产出是拍板结果
-
-**底层入口**:`easysdd-explore` 子技能。
-
-### easysdd-architecture-check(架构一致性检查,单工作流)
-
-适用于:**检查 design 是否自洽,或检查 design 与实际代码是否一致**。例如用户说"帮我做 architecture check"、"检查 design coherence"、"看 design 和代码一致吗"。
-
-| 检查目标 | 适用情境 | 产出 |
-|---|---|---|
-| `design-internal` | 检查 design 内部术语/约束/步骤是否一致 | 架构一致性检查报告(只报告,不修复) |
-| `design-vs-code` | 检查 design 承诺与实际代码实现是否一致 | 架构一致性检查报告(只报告,不修复) |
-
-**与其他工作流的关系**:
-
-- `easysdd-feature-design` 结束后可触发:在进入实现前做一次一致性体检
-- `easysdd-feature-acceptance` 前可触发:核对 design 与代码收敛情况
-- 本技能每次只允许检查一个目标(不发散),发现问题只给修复建议,不进行实际修复
-
-**底层入口**:`easysdd-architecture-check` 子技能。
-
-### easysdd-guidedoc（文档写作，单工作流）
-
-适用于：**为项目编写（或更新）开发者指南和用户指南**。产物落到 `docs/` 目录（项目根级），独立于 spec 工件维护，面向外部读者，可随时发布。不绑定特定开发阶段，可在 feature-acceptance 后触发（主动推送），也可独立触发。
-
-| 轨道 | 目标读者 | 输出路径 |
-|---|---|---|
-| `dev-guide` | 贡献者、集成方 | `docs/dev/{slug}.md` |
-| `user-guide` | 终端用户 | `docs/user/{slug}.md` |
-
-**与其他工作流的关系**：
-
-- `easysdd-feature-acceptance` 结束后：方案 doc 有接口变更 → 推送"需要更新 dev-guide 吗？"；有用户可见行为变更 → 推送"需要更新 user-guide 吗？"
-- `easysdd-feature-design` 第 2 节（接口契约）是 dev-guide 的主要信息来源；第 1 节（用户可见行为）是 user-guide 的主要信息来源
-- `easysdd-architecture-check` 发现 design 与代码不一致时，同步标记对应 guide `status=outdated`
-- 使用 `search-yaml.py` 按 `doc_type`、`component`、`tags` 检索 `docs/` 目录，无需额外 coverage 清单
-
-**底层入口**：`easysdd-guidedoc` 子技能。
-
-### easysdd-libdoc（库 API 参考文档，单工作流）
-
-适用于：**为库的公开表面（组件、函数、命令等）逐条目生成结构化参考文档**。产物落到 `docs/api/` 目录（项目根级），带条目清单（`_manifest.yaml`）追踪状态，支持单条目和批量两种模式。不绑定特定开发阶段，可在 feature-acceptance 后触发（主动推送），也可独立触发。
-
-| 条目类型 | 适用项目 | 输出路径 |
-|---|---|---|
-| UI 组件 | 组件库 | `docs/api/{slug}.md` |
-| 函数 / 模块 | 工具库 | `docs/api/{slug}.md` |
-| Endpoint | API Client | `docs/api/{slug}.md` |
-| 子命令 | CLI 工具 | `docs/api/{slug}.md` |
-
-**与其他工作流的关系**：
-
-- `easysdd-feature-acceptance` 结束后：新增/修改了库公开接口 → 推送"需要更新 libdoc 吗？"
-- `easysdd-guidedoc`：guide 内引用 libdoc 条目做详细参考（"完整 props 见 xxx"）；libdoc 条目的"相关条目"可链接到对应 guide
-- `easysdd-architecture-check` 发现接口变更但 libdoc 未同步 → 标记对应条目 `status=outdated`
-- `easysdd-libdoc` vs `easysdd-guidedoc`：libdoc 是零件级参考文档（"X 长什么样"），guidedoc 是任务级使用教程（"如何用 X 做 Y"）。互补不替代
-- 使用 `search-yaml.py` 按 `doc_type=lib-api-ref`、`entry`、`category`、`tags` 检索 `docs/api/` 目录
-
-**底层入口**：`easysdd-libdoc` 子技能。
-
-### (扩展位 — 未来子工作流挂在这里)
-
-> 用户后续会往 easysdd 里加更多子工作流(例如重构、迁移等)。新工作流定型后,把入口写进这一节,保持中心技能始终是"easysdd 全家福"的目录。
+### （扩展位 — 未来子工作流挂在这里）
 
 ---
 
-## 四、路由:用户该用哪个子技能
+## 四、路由：用户该用哪个子技能
 
-启动本技能后,先做一次定位,**而不是直接开讲解**。问用户两个问题(或者根据上下文自己判断):
+启动本技能后，先做一次定位，**而不是直接开讲解**。根据上下文判断（或直接问用户）：
 
-0. **这个仓库是否已经有 easysdd 目录结构?**
-   - 还没有 / 有零散文档但没接入 easysdd → 触发 `easysdd-onboarding` 技能,先搭骨架再开工
-   - 已有完整的 `easysdd/` 骨架 → 继续问 1
+0. **仓库是否已有 easysdd 目录？** 没有 → `easysdd-onboarding`，搭好再继续。
+1. **要做什么？** 按下表路由：
 
-1. **要做的是什么类型的工作?**
-   - 新功能 / 新能力 → 进 easysdd-feature 路径,继续问 2
-   - BUG / 异常行为 / 文档错误 → 进 easysdd-issue 路径,触发 `easysdd-issue` 技能做路由
-   - 仓库探索 / 提问调研 / 新人熟悉代码 → 触发 `easysdd-explore` 技能
-   - 架构一致性检查 / design coherence 检查 → 触发 `easysdd-architecture-check` 技能
-   - 推翻既有模块重做架构 → 不在 easysdd-feature 范围,应独立写重构方案 doc
-   - 记录技术选型 / 约束 / 架构决定 / 规约 → 触发 `easysdd-decisions` 技能
-   - 沉淀知识 / 记录踩坑经历 → 触发 `easysdd-compound` 技能
-   - 记录编程模式 / 库用法 / 技术技巧 → 触发 `easysdd-tricks` 技能
-   - 写/更新开发者指南 / 用户指南 → 触发 `easysdd-guidedoc` 技能
-   - 写/更新库 API 参考文档 / 组件文档 / 函数参考 → 触发 `easysdd-libdoc` 技能
-2. **(如果是 easysdd-feature)目前手上已有哪些产物?**
+| 用户意图 | 触发子技能 |
+|---|---|
+| 新功能 / 新能力 | `easysdd-feature`（它内部再路由到 brainstorm/design/implement/acceptance） |
+| BUG / 异常 / 文档错误 | `easysdd-issue`（它内部再路由到 report/analyze/fix） |
+| 仓库探索 / 提问调研 | `easysdd-explore` |
+| 架构一致性检查 | `easysdd-architecture-check` |
+| 记录技术选型 / 约束 / 规约 | `easysdd-decisions` |
+| 沉淀知识 / 记录踩坑 | `easysdd-compound` |
+| 记录编程模式 / 库用法 / 技巧 | `easysdd-tricks` |
+| 写/更新开发者指南 / 用户指南 | `easysdd-guidedoc` |
+| 写/更新库 API 参考 / 组件文档 | `easysdd-libdoc` |
+| 推翻既有模块重做架构 | 不在 easysdd-feature 范围，应独立写重构方案 doc |
 
-### easysdd-onboarding 路由
+2. **如果是 feature** → 继续问"手上已有哪些产物？"，由 `easysdd-feature` 子技能接手路由。
 
-触发 `easysdd-onboarding` 子技能——它自己会扫仓库判断走绿地路径还是迁移路径。本技能不重复那份逻辑。
-
-### easysdd-feature 路由
-
-触发 `easysdd-feature` 子技能——它是 feature 工作流的路由中心,持有完整路由表和 Stage 0 判断逻辑。本技能不重复那份逻辑。
-
-### easysdd-decisions 路由
-
-触发 `easysdd-decisions` 子技能——它会引导用户确认决策类型(tech-stack / architecture / constraint / convention),一次归档一条决策。本技能不重复那份逻辑。
-
-### easysdd-tricks 路由
-
-触发 `easysdd-tricks` 子技能——它会引导用户确认文档类型(pattern / library / technique)并填写 YAML frontmatter,最后落盘到技巧库目录。本技能不重复那份逻辑。
-
-### easysdd-explore 路由
-
-触发 `easysdd-explore` 子技能——它会引导用户明确探索问题与范围,做证据化代码阅读,并把探索结果落盘到探索归档目录。本技能不重复那份逻辑。
-
-### easysdd-architecture-check 路由
-
-触发 `easysdd-architecture-check` 子技能——它会先锁定单一检查目标(`design-internal` 或 `design-vs-code`),然后输出不一致清单和修复建议,不做实际修复。本技能不重复那份逻辑。
-
-### easysdd-guidedoc 路由
-
-触发 `easysdd-guidedoc` 子技能——它会先询问轨道（dev-guide / user-guide）和覆盖范围，搜索已有 guide 后起草或更新文档，用户 review 后落盘到 `docs/` 目录。本技能不重复那份逻辑。
-
-### easysdd-libdoc 路由
-
-触发 `easysdd-libdoc` 子技能——它会先扫描源码生成条目清单（`_manifest.yaml`），用户确认范围后按单条目或批量模式生成参考文档，落盘到 `docs/api/` 目录。本技能不重复那份逻辑。
+每个子技能持有自己的完整路由逻辑和退出条件，本技能只负责把用户送到正确入口，不重复子技能内容。
 
 ---
 
 ## 五、跨阶段的共同约束
 
-下列规则在所有 easysdd 子工作流里都适用,子技能里如果没显式重复,默认仍然成立。
+下列规则在所有 easysdd 子工作流里都适用，子技能里如果没显式重复，默认仍然成立。
 
 ### 1. 文档是一等产物
-- 所有 spec doc 都是交付物的一部分,代码交付时必须同步更新到与最终实现一致
-- "doc 以后再补" = 永远不补
-- feature 的方案 doc(`design.md`)必须带统一 YAML frontmatter,至少包含 `doc_type`、`feature`、`status`、`summary`、`tags`,这样才能被 `search-yaml.py` 稳定检索
-- 目录结构和路径变量见第二节"目录安排",本节不重复。两条最容易出错的原则反复强调:
-   - **一个 feature = 一个 feature 目录**——同一 feature 的 design / acceptance 永远聚合在一起
-  - **两类 doc 不混**:架构中心目录下是项目架构权威(长期),方案 doc 是单功能方案(短期),通过方案 doc 第 8 节连接——方案里引用架构中心目录下的 doc,必要时反过来在那里补一段引用方案 doc
+- spec doc 是交付物的一部分，代码交付时同步更新。"doc 以后再补" = 永远不补
+- 方案 doc 必须带 YAML frontmatter（`doc_type`、`feature`、`status`、`summary`、`tags`）
 
 ### 2. 术语锁定与防撞车
-- 引入新概念前必须 grep 既有代码 + 架构中心目录 + 所有 feature 的方案 doc,确认没有同名概念
-- 撞了:要么改新概念名,要么复用既有命名
-- 这条规则从 design 阶段开始严格执行,但 brainstorm 阶段也要避免引入将来会被 design 否掉的术语
+- 引入新概念前 grep 既有代码 + 架构中心 + 已有方案 doc，确认无同名概念
+- 撞了：改新名或复用旧名。从 design 阶段严格执行
 
 ### 3. 阶段间硬 checkpoint
-- 每个阶段的退出条件没满足,下一阶段不开始
-- 用户没明确放行,AI 不自作主张往下走
-- 哪怕用户说"看起来差不多了,继续吧",AI 也要逐项核对退出条件
+- 退出条件未满足，下一阶段不开始。用户没放行，AI 不自作主张继续
 
 ### 4. 范围守护
-- 阶段一锁死的"不做什么",后续每个阶段都要复核,防止偷偷扩范围
-- 在实现阶段发现"顺手可以优化的代码",**记 issue,不顺手改**
-- 引入方案外的新概念/抽象 → 先停下来更新方案 doc 第 0 节,再继续
+- "不做什么"每个阶段复核。顺手可优化的代码记 issue，不顺手改
+- 引入方案外的新概念 → 先更新方案 doc 第 0 节再继续
 
 ### 5. 不变量 > 测试用例
-- 测试用例本身没价值,**有价值的是它验证的不变量**
-- 一条测试如果不对应任何不变量,基本是垃圾测试
-- 阶段三列不变量时,验证手段按"便宜程度"优先选(类型系统 > 单测 > 运行时 assert > 人工)
+- 验证手段按便宜程度优先选：类型系统 > 单测 > 运行时 assert > 人工
 
 ### 6. UI 改动必须浏览器验证
-- 涉及前端视觉/交互的不变量,自动化测试不够,必须在验收阶段人工肉眼验证
-- 这是 `AGENTS.md` 的硬要求
+- 前端视觉/交互改动，验收阶段必须人工肉眼验证（`AGENTS.md` 硬要求）
 
-### 7. 设计 / 分析前搜技巧库
+### 7. 开工前搜已有归档
+- `easysdd-feature-design`、`easysdd-issue-analyze`、`easysdd-issue-fix` 开始前，用 `search-yaml.py` 搜以下目录，优先复用已有记录：
+  - **技巧库**（`tricks/`）：可复用的模式或库用法
+  - **探索归档**（`explores/`）：调用链、模块边界、历史结论
+  - **知识沉淀**（`learnings/`）：历史踩坑记录
+  - **决策归档**（`decisions/`）：已有约束与技术选型
+  - **已有方案 doc**（`features/`）：按 `doc_type=feature-design` 检索
+- 搜到相关记录：在文档里注明引用。没搜到：正常推进，结束后按需补归档
 
-- `easysdd-feature-design` 开始前:用 `search-yaml.py` 搜技巧库目录,按 `type`、`tags`、`topic` 等字段过滤,确认有无可复用的模式或库用法
-- `easysdd-issue-analyze` 开始前:同上搜技巧库,特别关注 `type: library` 文档——问题根因有时正是某个库的已知误用
-- 搜到相关记录:在方案 doc 或根因分析里注明引用,不要重复写它已经覆盖的内容
-- 没搜到:继续正常推进;工作结束后如有值得归纳的新技巧,走 `easysdd-tricks` 工作流落盘
-
-### 7.5 方案 doc 也纳入 YAML 检索
-
-- feature 的 `design.md` 生成后,可以直接用 `search-yaml.py` 在 `features/` 下搜索,例如 `python easysdd/tools/search-yaml.py --dir easysdd/features --filter doc_type=feature-design --filter status=approved`
-- frontmatter 只负责索引与粗筛;术语防撞车、契约核对仍要读正文并在需要时 grep 代码
-
-### 8. 设计 / 分析 / 修复前搜探索归档
-
-- `easysdd-feature-design`、`easysdd-issue-analyze`、`easysdd-issue-fix` 开始前:用 `search-yaml.py` 搜探索归档目录,优先复用已有证据(调用链、模块边界、历史结论)
-- 搜到相关记录:在本次文档里注明引用,并标注"本次是否沿用该结论"
-- 如果探索结论与当前代码不一致:在当前文档里显式写"探索记录已过期",并建议追加一条新的 explore 文档
-- 没搜到:正常推进;如果本次做了较多代码阅读,结束后建议补一条 `easysdd-explore`
-
-### 9. 不和 BUG 修复混路径
-- easysdd-feature 工作流不处理 BUG。在功能开发完成后发现的 BUG,走 issue 修复路径,不要回到本工作流的某个阶段去补
-- 这是为了保持每条路径的退出条件清晰;混路径会让 checkpoint 失效
+### 8. 不和 BUG 修复混路径
+- feature 工作流不处理 BUG，issue 工作流不做新功能。混路径会让 checkpoint 失效
 
 ---
 

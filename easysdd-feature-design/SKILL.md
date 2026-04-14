@@ -59,7 +59,21 @@ description: Feature 工作流阶段一：起草方案 doc（三层结构+测试
 
 向用户发出一次整体 review 提示。用户可以对任意部分提修改意见，你按意见修订后再次确认，直到用户明确"方案可以了"。用户明确放行后，把 YAML frontmatter 的 `status` 从 `draft` 改成 `approved`。
 
-### 4) 退出
+### 4) 生成 checklist.yaml
+
+方案 doc 确认后，从 design.md 中提取行动清单，落盘为同目录下的 `checklist.yaml`。这份清单是 implement 和 acceptance 阶段的执行依据——两个下游阶段会读取它、逐条推进、更新 status。
+
+**提取规则**（从 design.md 各节提取，不编造）：
+
+- `steps`：从第 3 节"推进顺序"逐步提取，每步一条
+- `checks`：从以下来源综合提取——
+  - 第 1 节"明确不做"的每条 → 范围守护检查项
+  - 第 2 节关键接口契约 → 接口一致性检查项
+  - 第 3 节测试设计的每条测试约束 → 测试验证检查项
+
+落盘后用 `validate-yaml.py --file {checklist.yaml 路径} --yaml-only` 校验语法。
+
+### 5) 退出
 
 完成退出条件核对后结束本阶段，并引导进入阶段二实现。
 
@@ -96,6 +110,40 @@ tags: [auth, email, login]
 - `## 2. 接口契约`（第二层：What）
 - `## 3. 实现提示`（第三层：How）
 - `## 4. 与项目级架构文档的关系`（收尾）
+
+### checklist.yaml 格式
+
+`checklist.yaml` 与 `design.md` 并列放在同一 feature 目录下。格式如下：
+
+```yaml
+# checklist.yaml — 由 feature-design 生成，implement/acceptance 阶段逐条更新 status
+
+feature: {feature 目录名}
+created: YYYY-MM-DD
+
+steps:  # implement 阶段按顺序执行
+  - action: "{步骤名}：{改动描述}"
+    exit_signal: "{退出信号}"
+    status: pending    # pending → done
+
+checks:  # acceptance 阶段逐条验证
+  - item: "{检查项描述}"
+    source: 接口契约 | 范围守护 | 测试约束   # 来源节
+    status: pending    # pending → passed | failed
+```
+
+**status 语义**：
+
+| 字段 | 初始值 | implement 更新 | acceptance 更新 |
+|---|---|---|---|
+| `steps[].status` | `pending` | → `done`（该步完成时） | — |
+| `checks[].status` | `pending` | — | → `passed` / `failed` |
+
+**规则**：
+
+- steps 条目数必须与 design.md 第 3 节推进顺序的步骤数一致
+- checks 至少包含：所有"不做什么"项 + 所有关键接口契约 + 所有测试约束
+- 不允许编造 design.md 里不存在的条目
 
 ---
 
@@ -228,8 +276,10 @@ const result = await authService.verifyCode({
 - [ ] 测试设计按功能点组织，且每个功能点都包含测试约束/验证方式/关键用例骨架
 - [ ] 记录了高风险实现约束
 - [ ] 用户确认通过后，frontmatter 的 `status` 已更新为 `approved`
+- [ ] `checklist.yaml` 已从 design.md 提取生成，且通过 `validate-yaml.py` 校验
+- [ ] `checklist.yaml` 的 steps 条目数与第 3 节推进顺序一致
 
-文件路径：方案 doc（若 feature 目录不存在则创建；同一 feature 的 design.md / acceptance.md 聚合在同一 feature 目录，目录位置见主技能 `easysdd` 第二节"目录安排"）
+文件路径：方案 doc（若 feature 目录不存在则创建；同一 feature 的 design.md / checklist.yaml / acceptance.md 聚合在同一 feature 目录，目录位置见主技能 `easysdd` 第二节"目录安排"）
 
 ---
 
@@ -248,4 +298,4 @@ const result = await authService.verifyCode({
 
 ## 七、退出后
 
-告诉用户："方案 doc 已就绪（含测试设计），下一步是阶段二：分步实现。可以触发 easysdd-feature-implement 技能。"
+告诉用户："方案 doc 已就绪（含测试设计），行动清单 `checklist.yaml` 已生成，下一步是阶段二：分步实现。可以触发 easysdd-feature-implement 技能。"
