@@ -86,6 +86,8 @@ easysdd/
 AI 读代码 → 直接告知用户根因 + 修复方案 → 用户确认 → AI 修复 → 用户验证通过 → AI 写 fix-note.md
 ```
 
+**判定口径**：是否进入快速通道，由 `easysdd-issue-report` 的启动检查做唯一正式判定；一旦进入标准路径并确认 `report.md`，后续阶段默认不再二次改判，避免 report / analysis / fix 三个阶段各说各话。
+
 不写 report.md 和 analysis.md——根因、修复方案、验证结果全部压缩进 fix-note.md 一份文档里。
 
 **快速通道不适用的情况**:

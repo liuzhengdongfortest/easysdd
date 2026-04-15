@@ -8,7 +8,7 @@ description: Feature 工作流阶段二：按方案 doc 分步实现代码，完
 
 ## 涉及的路径
 
-> 路径约定见根技能 `easysdd` 第二节（组织规则 11）。`{feature}` 格式：`YYYY-MM-DD-{英文 slug}`。到本阶段，feature 目录已由 brainstorm 或 design 阶段创建好。
+> 共享路径与命名约定以根技能 `easysdd` 第二节为准。本节只补充本阶段特有信息：到本阶段，feature 目录已由 brainstorm 或 design 阶段创建好。
 
 ## 你的职责
 
@@ -36,7 +36,7 @@ description: Feature 工作流阶段二：按方案 doc 分步实现代码，完
    - 第 3 节(推进步骤)步骤明确,有退出信号
 
    - 任何一项不达标 → 停下来,告诉用户先走 easysdd-feature-design 补齐
-2. **checklist.yaml 存在且有效**。检查同 feature 目录下的 `checklist.yaml`:
+2. **checklist.yaml 存在且有效**。`checklist.yaml` 的生命周期以 `easysdd/reference/shared-conventions.md` 为准；本阶段只消费并推进 `steps`。检查同 feature 目录下的 `checklist.yaml`:
    - 文件存在,且 `feature` 字段与当前 feature 目录一致
    - `steps` 列表非空,且每条 status 为 `pending`（或接续上次中断时部分为 `done`）
    - 不存在 → 停下来,告诉用户先走 easysdd-feature-design 生成

@@ -7,7 +7,7 @@ description: Feature 工作流阶段一：起草方案 doc（三层结构+测试
 
 ## 涉及的路径
 
-> 路径约定见根技能 `easysdd` 第二节（组织规则 11）。`{feature}` 格式：`YYYY-MM-DD-{英文 slug}`。到本阶段，feature 目录通常已由 brainstorm 阶段创建好；若不存在则在本阶段创建。
+> 共享路径与命名约定以根技能 `easysdd` 第二节为准。本节只补充本阶段特有信息：到本阶段，feature 目录通常已由 brainstorm 阶段创建好；若不存在则在本阶段创建。
 
 ## 你的职责
 
@@ -42,9 +42,12 @@ description: Feature 工作流阶段一：起草方案 doc（三层结构+测试
    - 架构总入口（项目级架构权威）
    - 架构索引（项目级架构 doc 索引）
    - 与用户需求相关的既有代码和架构中心目录下的子系统架构 doc
-4. **归档检索（按需）**——仅当功能涉及的模块曾有归档记录时才搜（归档目录为空或与功能无关则跳过）：
+4. **归档检索（按需）**——是否值得搜、优先搜哪些目录，以根技能 `easysdd` 第五节约束 7 为准；本阶段至少优先考虑以下目录：
    - 技巧库目录：`python easysdd/tools/search-yaml.py --dir easysdd/tricks --filter status=active --query "{feature 关键词}"`
    - 探索归档目录：`python easysdd/tools/search-yaml.py --dir easysdd/explores --query "{feature 关键词}"`
+   - 知识沉淀目录：`python easysdd/tools/search-yaml.py --dir easysdd/learnings --query "{feature 关键词}"`
+   - 决策归档目录：`python easysdd/tools/search-yaml.py --dir easysdd/decisions --filter status=active --query "{feature 关键词}"`
+   - 已有 feature 方案：`python easysdd/tools/search-yaml.py --dir easysdd/features --filter doc_type=feature-design --query "{feature 关键词}"`
 
 命中后优先复用，并在方案 doc 记录引用来源。
 
@@ -62,9 +65,9 @@ description: Feature 工作流阶段一：起草方案 doc（三层结构+测试
 
 ### 4) 生成 checklist.yaml
 
-方案 doc 确认后，从 design.md 中提取行动清单，落盘为同目录下的 `checklist.yaml`。这份清单是 implement 和 acceptance 阶段的执行依据——两个下游阶段会读取它、逐条推进、更新 status。
+方案 doc 确认后，从 design.md 中提取行动清单，落盘为同目录下的 `checklist.yaml`。这份清单的生命周期以 `easysdd/reference/shared-conventions.md` 为准：本阶段负责生成，implement 只推进 `steps`，acceptance 只核对 `checks`。
 
-**提取规则**（从 design.md 各节提取，不编造）：
+`design.md` / `checklist.yaml` 的完整模板、frontmatter 示例、节锚点、提取格式见 `easysdd/reference/feature-design-reference.md`。本阶段只保留提取原则：
 
 - `steps`：从第 3 节"推进顺序"逐步提取，每步一条
 - `checks`：从以下来源综合提取——
@@ -80,186 +83,22 @@ description: Feature 工作流阶段一：起草方案 doc（三层结构+测试
 
 ---
 
-## 三、模板（产出物长什么样）
+## 三、模板与格式
 
-### YAML frontmatter
+`design.md` / `checklist.yaml` 的完整参考已拆到 `easysdd/reference/feature-design-reference.md`，包括：
 
-最终 `design.md` 必须以 YAML frontmatter 开头，便于 `search-yaml.py` 在 `features/` 下检索。必填字段：
+- YAML frontmatter 示例
+- 顶层节锚点要求
+- `checklist.yaml` 完整格式与状态语义
+- 第 0-4 节各自该写什么
 
-- `doc_type`: 固定写 `feature-design`
-- `feature`: 当前 feature 目录名
-- `status`: `draft` / `approved` / `superseded`
-- `summary`: 一句话描述本功能目标
-- `tags`: 可检索标签列表，至少 2 个
-
-```markdown
----
-doc_type: feature-design
-feature: 2026-04-12-user-auth
-status: draft
-summary: 支持用户通过邮箱验证码登录后台
-tags: [auth, email, login]
----
-```
-
-### 节结构
-
-为兼容后续阶段技能的检查规则，`design.md` 必须保留以下顶层标题锚点：
-
-- `## 0. 术语约定`（强制，独立于三层之前）
-- `## 1. 决策与约束`（第一层：Why）
-- `## 2. 接口契约`（第二层：What）
-- `## 3. 实现提示`（第三层：How）
-- `## 4. 与项目级架构文档的关系`（收尾）
-
-### checklist.yaml 格式
-
-`checklist.yaml` 与 `design.md` 并列放在同一 feature 目录下。格式如下：
-
-```yaml
-# checklist.yaml — 由 feature-design 生成，implement/acceptance 阶段逐条更新 status
-
-feature: {feature 目录名}
-created: YYYY-MM-DD
-
-steps:  # implement 阶段按顺序执行
-  - action: "{步骤名}：{改动描述}"
-    exit_signal: "{退出信号}"
-    status: pending    # pending → done
-
-checks:  # acceptance 阶段逐条验证
-  - item: "{检查项描述}"
-    source: 接口契约 | 范围守护 | 测试约束   # 来源节
-    status: pending    # pending → passed | failed
-```
-
-**status 语义**：
-
-| 字段 | 初始值 | implement 更新 | acceptance 更新 |
-|---|---|---|---|
-| `steps[].status` | `pending` | → `done`（该步完成时） | — |
-| `checks[].status` | `pending` | — | → `passed` / `failed` |
-
-**规则**：
-
-- steps 条目数必须与 design.md 第 3 节推进顺序的步骤数一致
-- checks 至少包含：所有"不做什么"项 + 所有关键接口契约 + 所有测试约束
-- 不允许编造 design.md 里不存在的条目
-
----
-
-### 第 0 节：术语约定 — `## 0. 术语约定`
-
-独立于三层之前，术语表是方案 doc 的前置锁定项。
-
-每个关键术语写三列：
-
-| 术语 | 定义 | 防撞车结论 |
-|---|---|---|
-| `VerifyCode` | 一次性邮箱验证码对象 | grep 结果：代码中无同名概念 |
-
-要求：
-- 每个术语必须做 grep 防撞车（代码 + 架构中心目录 + 所有 feature 的方案 doc），命中则改名或复用
-- 术语表只写定义和防撞车结论，不解释"出现在哪一层"
-
----
-
-### 第一层：决策与约束（Why）— `## 1. 决策与约束`
-
-回答"为什么这么做"，不写字段堆砌。
-
-**必须覆盖：**
-
-1. **需求摘要**（3-5 句）：做什么、为谁、什么算成功、**明确不做什么**（至少 1-2 条）。
-2. **关键决策**：选型/取舍/硬约束/被拒方案，每条附理由（至少 1-2 条）。
-3. **主流程概述**：正常路径一句话 + 关键异常/边界行为预期。
-
-**篇幅控制**：这一层应在半屏内读完。如果决策超过 5 条，说明功能该拆了。
-
----
-
-### 第二层：接口契约（What）— `## 2. 接口契约`
-
-回答"接口长什么样"，精度标准是让实现者参考即能动手。
-
-**写作原则：示例优先，类型补充。**
-
-#### A. 契约示例
-
-每个关键接口给一段**具体的输入→输出示例**，覆盖正常路径 + 主要错误路径。示例自带位置上下文（注释标注文件路径 + 函数名）。
-
-````markdown
-```typescript
-// src/services/auth.ts — AuthService.verifyCode()
-const result = await authService.verifyCode({
-  email: "user@example.com",
-  code: "482916"
-});
-// → 成功: { ok: true, token: "eyJ..." }
-// → 验证码过期: { ok: false, error: "CODE_EXPIRED" }
-// → 验证码错误: { ok: false, error: "CODE_INVALID", remainingAttempts: 2 }
-```
-````
-
-**规则：**
-
-- 每个示例用注释标明来源位置（文件路径 + 函数名），不需要独立的"代码指针"清单
-- 先写调用者视角（"我传什么进去、拿到什么出来"），再（可选地）补正式类型定义
-- 只写**新增/变更**的接口，已有且不变的不要重复
-- 接口复杂（字段 > 5 个，或有嵌套结构）时，示例下方补正式类型定义；简单接口有示例就够
-
-#### B. 主流程图（按需）
-
-当调用链跨 3 个以上模块、或有并发/状态机时，补**一张** Mermaid 图。
-
-**规则：**
-
-- 一张图只说一件事——主流程，不要在同一张图里塞正常流 + 所有异常分支
-- 模块只有 2 个、调用关系线性？不画图，示例已经够了
-- 有显式状态机（状态 ≥ 3 个）时再加 `stateDiagram-v2`，没有就不画
-- 图如果需要文字解释才能看懂，说明图画得不好——重画，别加注释
-
-**篇幅控制**：Layer 2 整体不应超过方案 doc 总长度的 40%。超了就是在写百科全书。
-
----
-
-### 第三层：实现提示（How, but not code）— `## 3. 实现提示`
-
-回答"怎么落地"，只聚焦高风险和可执行推进，不写实现常识。
-
-**必须覆盖：**
-
-1. **改动计划**：新增/调整/删除（无则写"无"），逐项落到路径与职责。
-2. **实现风险与约束**：并发、顺序一致性、缓存失效、错误处理、性能红线——只写真正有风险的。
-3. **推进顺序**：按"功能可见度"拆 4-8 步，每步有依赖、范围、完成信号与人工 checkpoint。
-4. **测试设计**（按功能点组织）：
-   - 每个功能点写 3 项：测试约束（不变量）、验证方式（单测/集成/肉眼）、关键用例骨架
-   - 用例骨架至少包含：前置条件、输入/操作、期望结果
-   - 涉及 UI 交互的功能点，验证方式必须包含"肉眼"
-
----
-
-### 第 4 节：与项目级架构文档的关系 — `## 4. 与项目级架构文档的关系`
-
-收尾节，说明：
-
-- 本方案与架构中心目录下哪些 doc 有关系
-- 是否需要在架构总入口或子系统架构 doc 里补引用
-- 如有，写明需要补充的内容摘要
+本技能只保留流程约束：按该参考一次性起草完整初稿，不分批吐半成品。
 
 ---
 
 ## 四、review 提示
 
-完成初稿后，向用户发出整体 review 提示：
-
-> "方案 doc 已起草完成，请整体 review：
-> 1. 术语有没有和已有概念撞车？
-> 2. 决策与约束是否准确，"不做什么"有没有遗漏？
-> 3. 契约示例是否覆盖了你关心的正常 + 异常场景？
-> 4. 推进步骤和测试设计是否可执行？
->
-> 有修改意见直接说，确认后进入实现阶段。"
+整体 review 提示词见 `easysdd/reference/feature-design-reference.md`。本阶段要求仍然不变：只能发一次整体 review，不逐节拆开确认。
 
 ---
 

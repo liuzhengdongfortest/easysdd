@@ -30,7 +30,7 @@ easysdd-decisions 的职责就是让每一条重要的"已经决定了"都有完
 
 ## 二、涉及的路径
 
-> 路径约定见根技能 `easysdd` 第二节（组织规则 11）。文件命名：`YYYY-MM-DD-{slug}.md`。
+> 共享路径与命名约定以根技能 `easysdd` 第二节为准。本节只补充本工作流特有信息：文件命名为 `YYYY-MM-DD-{slug}.md`。
 
 ---
 
@@ -56,60 +56,11 @@ easysdd-decisions 的职责就是让每一条重要的"已经决定了"都有完
 
 ## 四、文档格式
 
-### YAML frontmatter
+决策文档的 frontmatter、正文模板和示例已拆到 `easysdd/reference/decisions-reference.md`。本技能只保留流程约束：
 
-```yaml
----
-category: tech-stack | architecture | constraint | convention
-date: YYYY-MM-DD
-slug: {英文描述，连字符分隔}
-status: active | superseded | deprecated
-superseded-by: {被哪条决策取代，仅 status=superseded 时填写}
-area: {受影响的领域，如 frontend / backend / testing / tooling / database / all}
-tags: []
----
-```
-
-**status 字段语义**：
-
-- `active`：当前有效，必须遵守
-- `superseded`：已被新决策取代（填 `superseded-by` 指向新文档的 slug）
-- `deprecated`：不再适用（如项目已经整体迁移，原约束自然失效）
-
-### 正文结构
-
-```markdown
-## 背景
-
-在什么情境下、面对什么问题或选择，需要做这个决定。
-
-## 决定
-
-一句话说清楚拍板的结论。（这节要短、明确、没有歧义）
-
-## 理由
-
-为什么选这个方案？列出最关键的 1-3 条理由，不要写成论文。
-
-## 考虑过的替代方案
-
-| 方案 | 为什么没选 |
-|---|---|
-| 方案 A | 原因 |
-| 方案 B | 原因 |
-
-（如果当时没有认真评估替代方案，明说"未做系统评估"，不要编造）
-
-## 后果
-
-这个决定意味着什么？什么事情变简单了，什么事情变复杂了，什么是现在必须遵守的。
-
-## 相关文档
-
-（可选）关联的架构文档、feature 方案、issue 分析等。
-```
-
-**宁缺毋滥原则**：用户说"没什么"的节省略，不用空话填充。`考虑过的替代方案` 和 `相关文档` 都是可选的。
+- `category` 仍然只允许 `tech-stack` / `architecture` / `constraint` / `convention`
+- `status` 仍然只允许 `active` / `superseded` / `deprecated`
+- `考虑过的替代方案` 与 `相关文档` 仍然是可选节，用户说"没什么"就省略
 
 ---
 
@@ -158,7 +109,7 @@ tags: []
 
 ## 六、搜索工具
 
-> 完整语法和示例见根技能 `easysdd` 第五节约束 11"工具用法速查"。本节只列 decisions 特有的典型查询。
+> 完整语法和示例见 `easysdd/reference/tools.md`。本节只列 decisions 特有的典型查询。
 
 ```bash
 # 列出所有当前有效的决策
@@ -180,7 +131,7 @@ python easysdd/tools/search-yaml.py --dir easysdd/decisions --query "{关键词}
 | `easysdd-feature-design` → 读 decisions | 方案设计开始前，搜索决策归档目录，确认方案不违反已有约束，并优先沿用已有技术选型 |
 | `easysdd-feature-design` → 写 decisions | 设计阶段做出的重要技术选择（影响超出单个 feature），设计完成后推荐记录进决策归档 |
 | `easysdd-issue-analyze` → 读 decisions | 根因分析时，有时"这里为什么这么做"的答案在决策归档里，先搜再分析 |
-| `easysdd-feature-acceptance` 结束 → 可选推荐 | 验收完成后，如果这次 feature 引入了新约定或技术，推荐记录一次 |
+| `easysdd-feature-acceptance` 结束 → 可选推荐 | 验收完成后，按 `easysdd/reference/shared-conventions.md` 的收尾推荐判断：如果这次 feature 引入了新约定或技术，推荐记录一次 |
 | `easysdd-compound` vs `easysdd-decisions` | compound 记录的是"发现了什么坑 / 最佳实践"（经验性）；decisions 记录的是"我们决定了什么"（规范性）。有时两者都要写，互不替代 |
 | `architecture/DESIGN.md` vs `decisions/` | DESIGN.md 是架构总览（高层次，跨模块，长期稳定）；decisions 是单条决策的完整存档（含理由和替代方案）。DESIGN.md 的"关键架构决定"节应链接到相关的 decisions 文档 |
 
@@ -190,80 +141,7 @@ python easysdd/tools/search-yaml.py --dir easysdd/decisions --query "{关键词}
 
 ## 八、产物示例
 
-### 技术选型示例
-
-```markdown
----
-category: tech-stack
-date: 2026-04-11
-slug: vite-as-bundler
-status: active
-area: frontend
-tags: [vite, bundler, build-tool]
----
-
-## 背景
-
-项目启动时需要选择前端构建工具。主要候选为 Vite 和 Webpack。
-
-## 决定
-
-使用 Vite 作为开发和生产构建工具。
-
-## 理由
-
-1. 开发模式下基于原生 ESM，冷启动和热更新速度远快于 Webpack（大型项目差距更明显）
-2. 配置更简洁，适合当前团队规模
-3. 与 Vue 3 生态深度集成，官方支持
-
-## 考虑过的替代方案
-
-| 方案 | 为什么没选 |
-|---|---|
-| Webpack 5 | 配置复杂度高，开发启动慢，无明显优势 |
-| esbuild 直接使用 | 缺乏开发服务器和 HMR 的完整支持，需额外集成工作 |
-
-## 后果
-
-- 所有构建相关配置集中在 `vite.config.ts`，不引入 `webpack.config.js`
-- 插件选型优先考虑 Vite 插件生态，Webpack-only 插件不引入
-- 如需 SSR，使用 Vite SSR 模式，不引入其他构建层
-```
-
-### 约束示例
-
-```markdown
----
-category: constraint
-date: 2026-04-11
-slug: no-direct-fetch-outside-http-module
-status: active
-area: frontend
-tags: [http, fetch, api]
----
-
-## 背景
-
-早期代码里 `fetch` 调用散落在各个组件和 store 里，导致：错误处理不统一、鉴权逻辑需要到处复制、Mock 困难。
-
-## 决定
-
-所有外部 API 调用必须通过 `src/http/` 模块，禁止在组件或 store 里直接调用 `fetch` 或 `axios`。
-
-## 理由
-
-1. 鉴权、错误处理、日志统一在 http 模块做一次，不散落
-2. 测试时 Mock 一个入口比 Mock 全局 fetch 干净
-
-## 考虑过的替代方案
-
-未做系统评估。约束来源于对早期散落调用的教训总结。
-
-## 后果
-
-- `src/http/` 是唯一的网络请求出口，新 API 接入先在这里加封装
-- Code Review 时，组件里出现 `fetch(` 或 `axios.get(` 直接打回
-```
+完整示例已拆到 `easysdd/reference/decisions-reference.md`。本技能正文不再嵌入长示例。
 
 ---
 
