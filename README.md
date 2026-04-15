@@ -1,149 +1,90 @@
 # EasySDD
 
-**Easy Spec-Driven Development** —— 让 AI 辅助编程不再失控的规约驱动工作流。
+> 让 Claude Code 不再每次重启都失忆，也不再一口气写出 800 行你读不懂的代码。
 
-> 需求丢给 AI，代码跑出来了，但三个月后没人看懂它怎么设计的？  
-> EasySDD 在"需求"和"代码"之间加一层 spec，让每次功能开发都有迹可查。
+你用 Claude Code 写代码，大概经历过这几件事：给它一个需求，它刷刷写完几百行，你一看——里面起的名字跟你原来代码里的对不上，好几处顺手改了不该动的地方；修一个 bug，现象是没了，但下次遇到类似的问题又得从头查；上周好不容易让它理解的一个项目里的约定，这周新会话里它又忘了。
 
----
+不是 AI 不行，是你每次都给了它一个空白起点。
 
-## 为什么需要它
-
-把需求直接丢给 AI 写代码，有三种典型失败模式：
-
-| 失败模式 | 表现 |
-|---|---|
-| **术语撞车** | AI 引入的新名词和老代码概念重叠，后续改动要反复分辨"这里的 X 是哪种 X" |
-| **范围失控** | AI 顺手改了不该动的地方，或把简单需求做成了过度设计的小框架 |
-| **无从追溯** | 功能做完没留下设计文档，下次维护等于从零理解一遍 |
-
-EasySDD 的解法很简单：**先写 spec，再写代码，最后闭环验收**。
+**EasySDD 的想法**：开发里反复出现的几类事——加功能、修 bug、把踩过的坑记下来、定一个技术选型、摸一块陌生代码、接手一个新仓库——每一类都配一套固定做法，做完留一份文件。下次再碰到同类的事，AI 和你都能读到上次写的东西，不从零开始。
 
 ---
 
-## 快速上手
+## 为什么是"几类事"而不是一个通用流程
 
-EasySDD 是一套 **[Claude Code](https://claude.ai/code) 技能集**，无需安装额外工具，从 GitHub 直接安装：
+因为不同的事出问题的方式不一样：
+
+- 加新功能的时候，最容易**改着改着改出了范围，或者起的名字跟原来代码里的对不上**
+- 修 bug 的时候，最容易"**看着修好了，根本原因还在**"
+- 踩的坑不写下来，三周之后的你自己**还会再踩一遍**
+
+一个通用流程要么照顾不全，要么套在每件事上都嫌重。EasySDD 把这些事拆开，每类配一套子技能，各自大小合适。
+
+| 要做的事 | 子技能 | 做完留下的文件 |
+|---|---|---|
+| 加新功能 | `easysdd-feature` | `design.md` + `acceptance.md` |
+| 修 bug | `easysdd-issue` | `report.md` + `analysis.md` + `fix-note.md` |
+| 把踩过的坑记下来 | `easysdd-compound` | `learnings/*.md` |
+| 写"这种情况这么做"的参考 | `easysdd-tricks` | `tricks/*.md` |
+| 定约束、记技术选型 | `easysdd-decisions` | `decisions/*.md` |
+| 把一次代码调研存起来 | `easysdd-explore` | `explores/*.md` |
+| 写开发者指南 / 用户指南 | `easysdd-guidedoc` | `docs/dev/*.md`、`docs/user/*.md` |
+| 写库的 API 参考 | `easysdd-libdoc` | `docs/api/*.md` |
+| 检查设计和代码有没有对上 | `easysdd-architecture-check` | 只出检查报告，不存档 |
+| 把新仓库接入 EasySDD | `easysdd-onboarding` | `easysdd/` 骨架 |
+
+---
+
+## 一个 feature 流程走下来是什么样
+
+以"加用户登录功能"为例：
+
+1. 你说「做个登录功能」——AI 不会马上写代码，先进 design 阶段，产出一份 `design.md`：里面有个术语表（讲清楚什么叫"用户"、什么叫"会话"，防着跟老代码里的叫法对不上）、接口怎么约定、以及测试里那些"代码上线以后必须永远成立"的条件
+2. 你读这份 doc，改到满意，才拍板
+3. 进 implement 阶段，AI 按 doc 一步步写——每写完一段停一下让你看，不一口气写完几百行
+4. 最后进 acceptance 阶段，对着 doc 核一遍代码真的做到了当初答应的事；然后代码和 doc 一起 commit
+
+最要紧的不是这套流程本身，是**那份 doc 留了下来**——下次谁要改登录模块，能直接读到当时为什么这么设计。
+
+需求特别小的时候可以走 `easysdd-feature-fastforward`——写一份简短方案直接进实现，不做完整的 review。
+
+---
+
+## 装上开始用
+
+EasySDD 是一套 [Claude Code](https://claude.ai/code) 技能集，不需要装别的工具：
 
 ```bash
 claude skills add liuzhengdongfortest/easysdd
 ```
 
-安装完成后，在项目里初始化目录骨架：
+在项目里初始化目录：
 
 > 对 Claude 说：「在这个项目里初始化 easysdd」
 
-Claude 会创建 `easysdd/` 目录结构，之后所有工作流都能正常触发。
+然后开始第一件事：
 
-**第一个功能怎么开始？**
+> 对 Claude 说：「我要做 X 功能，走 easysdd-feature 流程」
+>
+> 或者：「这里有个 bug，走 easysdd-issue 流程」
 
-> 对 Claude 说：「我要做一个用户登录功能，走 easysdd-feature 流程」
-
-Claude 会依次引导你经过：术语定义 → 接口设计 → 实现 → 验收，每个阶段结束都需要你确认再继续。
-
----
-
-## 工作流一览
-
-```
-新功能   →  [brainstorm] → design → implement → acceptance
-BUG 修复 →  report → analyze → fix
-沉淀经验 →  compound / tricks / decisions / explore
-```
-
-### 新功能开发（easysdd-feature）
-
-| 阶段 | 产出 | 说明 |
-|---|---|---|
-| ⓪ Brainstorm（可选） | `brainstorm.md` | 需求模糊时，AI 做思考伙伴帮你捋清楚 |
-| ① Design | `design.md` | 术语表 + 接口契约 + 测试设计，你 review 拍板 |
-| ② Implement | 代码 | AI 按方案分步实现，阶段间有 checkpoint |
-| ③ Acceptance | `acceptance.md` | 逐层核对方案 + 架构归并 + 收尾确认 |
-
-> 三个正式阶段**不可跳、不可合并、不可并行**。每个阶段退出条件未满足，下一阶段不开始。
-
-**需求范围很小？** 用 `easysdd-feature-fastforward`——写完 spec 直接进实现，跳过完整的 design review。
-
-### BUG 修复（easysdd-issue）
-
-| 阶段 | 产出 |
-|---|---|
-| ① Report | `report.md` —— 结构化问题报告 |
-| ② Analyze | `analysis.md` —— 根因分析 + 影响面评估 |
-| ③ Fix | `fix-note.md` —— 修复记录 + 验证结果 |
-
-### 知识资产沉淀
-
-| 子工作流 | 适用场景 | 存放位置 |
-|---|---|---|
-| `easysdd-compound` | 踩坑回顾、最佳实践提炼 | `easysdd/learnings/` |
-| `easysdd-decisions` | 技术选型、架构决定、约束、规约 | `easysdd/decisions/` |
-| `easysdd-tricks` | 可复用的编程模式、库用法技巧 | `easysdd/tricks/` |
-| `easysdd-explore` | 代码调研、模块结构梳理 | `easysdd/explores/` |
+没说清楚用哪个子技能也行，Claude 会从根技能 `easysdd` 自己路由到合适的那一个。
 
 ---
 
-## 目录结构
+## 这套东西在赌什么
 
-所有产物统一放在项目根目录的 `easysdd/` 下：
+**一份好方案花 20 分钟写，能省 2 小时的返工和 2 周后的一头雾水。**
 
-```
-easysdd/
-├── architecture/        ← 项目架构权威（长期，跨 feature 共享）
-├── features/            ← 每个 feature 一个子目录
-│   └── 2026-04-11-user-auth/
-│       ├── brainstorm.md
-│       ├── design.md    ← 含 YAML frontmatter，可被脚本检索
-│       └── acceptance.md
-├── issues/              ← 每个 issue 一个子目录
-│   └── 2026-04-12-login-crash/
-│       ├── report.md
-│       ├── analysis.md
-│       └── fix-note.md
-├── learnings/           ← 坑点 & 知识文档
-├── decisions/           ← 技术选型 & 架构决定
-├── tricks/              ← 编程技巧 & 库用法
-├── explores/            ← 代码调研存档
-└── tools/
-    └── search-yaml.py   ← 按 frontmatter 字段检索所有 spec 文档
-```
+每套子流程都尽量短——能快速走完就快速走完，不确定的地方才停下来问你。阶段中间让你看一眼不是走形式，是因为 AI 最容易出事的地方就是一口气写完几百行代码才让你看，等你发现问题想停都停不下来了。
 
 ---
 
-## 核心原则
+## 想看得更深
 
-1. **不从需求直奔代码** —— 任何非 trivial 的工作都先产出 spec，review 通过再动手
-2. **术语先锁死** —— spec 第一节就是术语表，新概念必须显式命名，不和既有概念撞车
-3. **不变量比测试用例更重要** —— 测试设计的核心是列出"必须永远满足的断言"
-4. **阶段间有人工 checkpoint** —— 不允许一口气铺完几百行，截得早比截得晚好
-5. **spec 是交付物的一部分** —— 代码交付时同步留下文档，下次维护才有据可查
-
----
-
-## 子工作流速查
-
-| 你想做什么 | 触发技能 |
-|---|---|
-| 新功能（需求清晰） | `easysdd-feature` |
-| 新功能（需求模糊，先捋清楚） | `easysdd-feature-brainstorm` |
-| 新功能（范围小，快速模式） | `easysdd-feature-fastforward` |
-| 修复 BUG | `easysdd-issue` |
-| 检查设计是否自洽 / 和代码是否一致 | `easysdd-architecture-check` |
-| 新项目接入 easysdd | `easysdd-onboarding` |
-| 沉淀踩坑经验 | `easysdd-compound` |
-| 归档技术决策 | `easysdd-decisions` |
-| 记录编程技巧 | `easysdd-tricks` |
-| 探索 & 调研代码库 | `easysdd-explore` |
-
----
-
-## 设计理念
-
-EasySDD 不是要用繁文缛节拖慢开发。它的核心赌注是：
-
-> **一份好的 spec 花 20 分钟，能省 2 小时的返工和 2 周后的困惑。**
-
-每条子工作流都尽量短——能快速通过的就快速通过，不确定的才停下来对话。`fastforward` 模式专门为范围小的功能设计，写完 spec 直接进实现，没有多余步骤。
+- 根技能讲解：[`easysdd/SKILL.md`](easysdd/SKILL.md)
+- 共享约定（目录结构、YAML frontmatter、checklist 怎么用、最后怎么 commit）：[`easysdd/reference/shared-conventions.md`](easysdd/reference/shared-conventions.md)
+- 项目架构入口：[`easysdd/architecture/DESIGN.md`](easysdd/architecture/DESIGN.md)
 
 ---
 
