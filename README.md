@@ -21,9 +21,29 @@ EasySDD 的解法很简单：**先写 spec，再写代码，最后闭环验收**
 
 ---
 
-## 工作流一览
+## 快速上手
 
-EasySDD 包含多条子工作流，覆盖开发全生命周期：
+EasySDD 是一套 **[Claude Code](https://claude.ai/code) 技能集**，无需安装额外工具，从 GitHub 直接安装：
+
+```bash
+claude skills add liuzhengdongfortest/easysdd
+```
+
+安装完成后，在项目里初始化目录骨架：
+
+> 对 Claude 说：「在这个项目里初始化 easysdd」
+
+Claude 会创建 `easysdd/` 目录结构，之后所有工作流都能正常触发。
+
+**第一个功能怎么开始？**
+
+> 对 Claude 说：「我要做一个用户登录功能，走 easysdd-feature 流程」
+
+Claude 会依次引导你经过：术语定义 → 接口设计 → 实现 → 验收，每个阶段结束都需要你确认再继续。
+
+---
+
+## 工作流一览
 
 ```
 新功能   →  [brainstorm] → design → implement → acceptance
@@ -35,12 +55,14 @@ BUG 修复 →  report → analyze → fix
 
 | 阶段 | 产出 | 说明 |
 |---|---|---|
-| ⓪ Brainstorm（可选） | `brainstorm.md` | 模糊想法磨清晰，AI 做思考伙伴 |
-| ① Design | `design.md` | 术语表 + 接口契约 + 测试设计，用户整体 review 拍板 |
+| ⓪ Brainstorm（可选） | `brainstorm.md` | 需求模糊时，AI 做思考伙伴帮你捋清楚 |
+| ① Design | `design.md` | 术语表 + 接口契约 + 测试设计，你 review 拍板 |
 | ② Implement | 代码 | AI 按方案分步实现，阶段间有 checkpoint |
 | ③ Acceptance | `acceptance.md` | 逐层核对方案 + 架构归并 + 收尾确认 |
 
 > 三个正式阶段**不可跳、不可合并、不可并行**。每个阶段退出条件未满足，下一阶段不开始。
+
+**需求范围很小？** 用 `easysdd-feature-fastforward`——写完 spec 直接进实现，跳过完整的 design review。
 
 ### BUG 修复（easysdd-issue）
 
@@ -95,20 +117,6 @@ easysdd/
 3. **不变量比测试用例更重要** —— 测试设计的核心是列出"必须永远满足的断言"
 4. **阶段间有人工 checkpoint** —— 不允许一口气铺完几百行，截得早比截得晚好
 5. **spec 是交付物的一部分** —— 代码交付时同步留下文档，下次维护才有据可查
-
----
-
-## 快速上手
-
-EasySDD 以 [GitHub Copilot Agent 技能](https://code.visualstudio.com/docs/copilot/copilot-customization) 的形式运行，无需安装额外工具。
-
-**第一步：把技能文件放到你的 Agent 技能目录**（通常是 `~/.agents/skills/`）
-
-**第二步：在已有项目里初始化 easysdd 目录骨架**
-> 对 Copilot 说：「在这个项目里用 easysdd」，触发 `easysdd-onboarding` 技能
-
-**第三步：开始第一个功能**
-> 对 Copilot 说：「我要做一个用户登录功能」，触发 `easysdd-feature` 技能
 
 ---
 
