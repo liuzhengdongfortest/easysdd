@@ -10,16 +10,16 @@ Filter syntax (--filter flag, repeatable, AND logic):
   key~=value    Substring match on a string field, or element-in for list fields
 
 Usage examples:
-  # Search easysdd/learnings (compound docs)
-  python easysdd/tools/search-yaml.py --dir easysdd/learnings --filter track=pitfall
-  python easysdd/tools/search-yaml.py --dir easysdd/learnings --filter tags~=prisma --filter severity=high
-  python easysdd/tools/search-yaml.py --dir easysdd/learnings --filter component~=database --full
+  # Search easysdd/compound (learning / trick / decision / explore docs share this dir)
+  python easysdd/tools/search-yaml.py --dir easysdd/compound --filter doc_type=learning --filter track=pitfall
+  python easysdd/tools/search-yaml.py --dir easysdd/compound --filter doc_type=trick --filter tags~=prisma
+  python easysdd/tools/search-yaml.py --dir easysdd/compound --filter doc_type=decision --filter status=active --full
 
   # Full-text search in body + frontmatter values
-  python easysdd/tools/search-yaml.py --dir easysdd/learnings --query "shadow database"
+  python easysdd/tools/search-yaml.py --dir easysdd/compound --query "shadow database"
 
   # JSON output for AI agent consumption
-  python easysdd/tools/search-yaml.py --dir easysdd/learnings --filter track=knowledge --json
+  python easysdd/tools/search-yaml.py --dir easysdd/compound --filter doc_type=learning --filter track=knowledge --json
 
   # Works on any yaml-frontmatter markdown directory
   python easysdd/tools/search-yaml.py --dir docs/decisions --filter status=accepted

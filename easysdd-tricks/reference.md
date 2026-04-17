@@ -6,6 +6,7 @@
 
 ```yaml
 ---
+doc_type: trick
 type: pattern | library | technique
 date: YYYY-MM-DD
 slug: {英文描述，连字符分隔}
@@ -17,6 +18,8 @@ status: active | superseded
 superseded-by: {可选}
 ---
 ```
+
+文件名：`easysdd/compound/YYYY-MM-DD-trick-{slug}.md`。
 
 ## 2. 正文模板
 
@@ -42,6 +45,7 @@ superseded-by: {可选}
 
 ```markdown
 ---
+doc_type: trick
 type: pattern
 date: 2026-04-11
 slug: repository-pattern-data-access

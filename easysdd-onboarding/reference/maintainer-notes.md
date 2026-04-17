@@ -1,6 +1,6 @@
 # easysdd 维护者说明
 
-本文件存放维护 easysdd 技能家族时需要反复查阅、但不适合继续放在根技能正文里的说明。
+本文件由 `easysdd-onboarding` 复制到项目的 `easysdd/reference/maintainer-notes.md`。维护 easysdd 技能家族时需要反复查阅、但不适合继续放在根技能正文里的说明。
 
 ---
 

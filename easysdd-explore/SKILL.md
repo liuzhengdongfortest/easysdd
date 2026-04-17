@@ -16,13 +16,9 @@ description: 对仓库做一次定向代码探索，把"提问 → 读代码 →
 - feature-design / issue-analyze / issue-fix 前先补一轮证据化探索
 - 技术方向还在讨论，需要先做轻量 spike（只探索，不拍板）
 
-不适用的场景：
+本技能只负责"看到了什么"的证据化记录。如果用户的意图其实是别的（拍板、处方、修 bug），由 easysdd 根技能路由到对应子技能。
 
-- 已经是明确的拍板动作 → 该用 `easysdd-decisions`
-- 已经是可复用处方总结 → 该用 `easysdd-tricks`
-- 已经在做 bug 修复并且根因明确 → 直接走 `easysdd-issue-fix`
-
-> 共享路径与命名约定看根技能 `easysdd-core` 第二节。文件命名 `YYYY-MM-DD-{slug}.md`。
+> 共享路径与命名约定看 `easysdd/reference/shared-conventions.md`。本技能的产物写入 `easysdd/compound/`，文件命名 `YYYY-MM-DD-explore-{slug}.md`，frontmatter 带 `doc_type: explore`。
 
 ---
 
@@ -76,37 +72,28 @@ description: 对仓库做一次定向代码探索，把"提问 → 读代码 →
 
 ### Phase 4：归档
 
-- 写入探索归档目录，命名 `YYYY-MM-DD-{slug}.md`
+- 写入 `easysdd/compound/`，命名 `YYYY-MM-DD-explore-{slug}.md`
+- frontmatter 顶部带 `doc_type: explore`（见 `reference.md`）
 - 归档后用搜索工具查有无语义重叠的历史探索
 - 存在冲突或过期记录就提示用户将旧文档标为 `outdated`
 
-### Phase 5：向后续工作流回传
+### Phase 5：给出下一步建议
 
-按下面"与其他工作流的关系"里的路由表给出下一步建议。
+证据已经收齐后，一句话提示用户接下来可能的方向（比如"要不要基于这份 explore 去设计方案"）。用户说"不用"就跳过，不要把用户拖进新的工作流——路由由根技能负责。
 
 ---
 
 ## 搜索工具
 
-> 完整语法和示例见 `easysdd-core/reference/tools.md`。本节只列 explore 特有的典型查询。
+> 完整语法和示例见 `easysdd/reference/tools.md`。本节只列 explore 特有的典型查询。
 
 ```bash
 # 按类型筛选
-python easysdd/tools/search-yaml.py --dir easysdd/explores --filter type=module-overview --filter status=active
+python easysdd/tools/search-yaml.py --dir easysdd/compound --filter doc_type=explore --filter type=module-overview --filter status=active
 
 # 归档后查重叠
-python easysdd/tools/search-yaml.py --dir easysdd/explores --query "{关键词}" --json
+python easysdd/tools/search-yaml.py --dir easysdd/compound --filter doc_type=explore --query "{关键词}" --json
 ```
-
----
-
-## 与其他工作流的关系
-
-- `easysdd-feature-design` 开始前：先搜 explores，复用调用链与模块边界证据
-- `easysdd-issue-analyze` 开始前：先搜 explores，减少重复定位
-- `easysdd-issue-fix` 开始前：搜 explores，确认修复点与历史证据一致
-- `easysdd-explore` vs `easysdd-tricks`：explore 记"看到了什么"，tricks 记"推荐怎么做"
-- `easysdd-explore` vs `easysdd-decisions`：explore 是输入，decisions 是拍板
 
 ---
 
@@ -116,20 +103,21 @@ python easysdd/tools/search-yaml.py --dir easysdd/explores --query "{关键词}"
 - [ ] 速答节已给出核心结论（结论前置，不埋在证据之后）
 - [ ] 关键证据 3-8 条，每条标注文件:行号，并说明支撑哪个结论
 - [ ] 涉及多模块协作或 module-overview / spike 类型时，速答节有 Mermaid 图
-- [ ] 文档已归档到探索归档目录
+- [ ] 文档已归档到 `easysdd/compound/`，文件名前缀 `explore-`
 - [ ] 已给出后续建议（路由到哪个子工作流）
 
 ---
 
 ## 容易踩的坑
 
-> 归档类工作流共享守护规则（只增不删、宁缺毋滥、不替用户写、可发现性、归档后查重叠）见根技能 `easysdd-core` 第五节约束 10。本技能特有的反模式：
+> 归档类工作流共享守护规则（只增不删、宁缺毋滥、不替用户写、可发现性、归档后查重叠）见 `easysdd/reference/shared-conventions.md` 第 6 节。本技能特有的反模式：
 
 - 不读代码直接给结论
 - 证据只写"看起来像"，不写文件:行号
 - 结论写在证据之后——速答节必须在关键证据节之前
 - 证据节比速答节长数倍——先精简证据，选不支撑结论的条目删掉
 - 跨模块流程没有 Mermaid 图，只靠文字描述多模块协作
-- 把 explore 文档写成 decisions（提前拍板）
-- 把 explore 文档写成 tricks（直接给处方，没有证据链）
+- 提前拍板——explore 只记"看到了什么"，不下"以后应该怎么做"的结论
+- 直接给处方没有证据链——每条结论都必须回溯到具体的文件:行号
 - 历史 explore 已过期却继续引用，不做 `status` 标注
+- 读写 `compound/` 目录里 `doc_type` 不是 `explore` 的文档——本技能只负责 explore 文档

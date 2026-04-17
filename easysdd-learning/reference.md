@@ -1,6 +1,6 @@
-# compound 参考模板
+# learning 参考模板
 
-本文件提供 `easysdd-compound` 的两条轨道模板和示例。
+本文件提供 `easysdd-learning` 的两条轨道模板和示例。产出文档写入 `easysdd/compound/`，文件名 `YYYY-MM-DD-learning-{slug}.md`。
 
 ## 1. 坑点轨道（pitfall）
 
@@ -8,6 +8,7 @@
 
 ```yaml
 ---
+doc_type: learning
 track: pitfall
 date: YYYY-MM-DD
 slug: {英文描述，连字符分隔}
@@ -32,6 +33,7 @@ tags: []
 
 ```yaml
 ---
+doc_type: learning
 track: knowledge
 date: YYYY-MM-DD
 slug: {英文描述，连字符分隔}

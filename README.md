@@ -24,10 +24,10 @@
 |---|---|---|
 | 加新功能 | `easysdd-feature` | `design.md` + `acceptance.md` |
 | 修 bug | `easysdd-issue` | `report.md` + `analysis.md` + `fix-note.md` |
-| 把踩过的坑记下来 | `easysdd-compound` | `learnings/*.md` |
-| 写"这种情况这么做"的参考 | `easysdd-tricks` | `tricks/*.md` |
-| 定约束、记技术选型 | `easysdd-decisions` | `decisions/*.md` |
-| 把一次代码调研存起来 | `easysdd-explore` | `explores/*.md` |
+| 把踩过的坑记下来 | `easysdd-learning` | `compound/YYYY-MM-DD-learning-*.md` |
+| 写"这种情况这么做"的参考 | `easysdd-tricks` | `compound/YYYY-MM-DD-trick-*.md` |
+| 定约束、记技术选型 | `easysdd-decisions` | `compound/YYYY-MM-DD-decision-*.md` |
+| 把一次代码调研存起来 | `easysdd-explore` | `compound/YYYY-MM-DD-explore-*.md` |
 | 写开发者指南 / 用户指南 | `easysdd-guidedoc` | `docs/dev/*.md`、`docs/user/*.md` |
 | 写库的 API 参考 | `easysdd-libdoc` | `docs/api/*.md` |
 | 检查设计和代码有没有对上 | `easysdd-architecture-check` | 只出检查报告，不存档 |
@@ -83,7 +83,7 @@ claude skills add liuzhengdongfortest/easysdd
 ## 想看得更深
 
 - 根技能讲解：[`easysdd-core/SKILL.md`](easysdd/SKILL.md)
-- 共享约定（目录结构、YAML frontmatter、checklist 怎么用、最后怎么 commit）：[`easysdd-core/reference/shared-conventions.md`](easysdd/reference/shared-conventions.md)
+- 共享约定（目录结构、YAML frontmatter、checklist 怎么用、最后怎么 commit）：[`easysdd/reference/shared-conventions.md`](easysdd/reference/shared-conventions.md)（由 `easysdd-onboarding` 从技能包复制到项目）
 - 项目架构入口：[`easysdd/architecture/DESIGN.md`](easysdd/architecture/DESIGN.md)
 
 ---

@@ -6,6 +6,7 @@
 
 ```yaml
 ---
+doc_type: decision
 category: tech-stack | architecture | constraint | convention
 date: YYYY-MM-DD
 slug: {英文描述，连字符分隔}
@@ -15,6 +16,8 @@ area: {受影响领域}
 tags: []
 ---
 ```
+
+文件名：`easysdd/compound/YYYY-MM-DD-decision-{slug}.md`。
 
 ## 2. 正文模板
 
@@ -38,6 +41,7 @@ tags: []
 
 ```markdown
 ---
+doc_type: decision
 category: tech-stack
 date: 2026-04-11
 slug: vite-as-bundler

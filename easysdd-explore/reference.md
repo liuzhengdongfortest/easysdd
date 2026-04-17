@@ -6,6 +6,7 @@
 
 ```yaml
 ---
+doc_type: explore
 type: question | module-overview | spike
 date: YYYY-MM-DD
 slug: {英文描述，连字符分隔}
@@ -16,6 +17,8 @@ status: active | outdated
 confidence: high | medium | low
 ---
 ```
+
+文件名：`easysdd/compound/YYYY-MM-DD-explore-{slug}.md`。
 
 ## 2. 正文结构
 
@@ -36,11 +39,6 @@ confidence: high | medium | low
 - 涉及多模块协作时，在速答节附 Mermaid 图
 - 结论必须能被证据支撑
 
-## 4. 后续建议路由
+## 4. 后续建议
 
-- 需求未落方案 → `easysdd-feature-design`
-- 需求已有方案 → `easysdd-feature-implement`
-- 问题已成型但根因未明 → `easysdd-issue-analyze`
-- 根因明确且用户确认 → `easysdd-issue-fix`
-- 形成长期规范拍板 → `easysdd-decisions`
-- 沉淀通用做法 → `easysdd-tricks`
+`后续建议` 节写一句话提示用户接下来可能的方向（用户意图由根技能负责路由，本节不枚举候选技能）。用户说"不用"就跳过。
