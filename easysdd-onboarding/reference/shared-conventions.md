@@ -62,9 +62,9 @@ easysdd/
 
 - `learning` / `trick` / `decision` / `explore` 四个子技能的产物**统一写入 `easysdd/compound/` 目录**
 - 每个文档必须在 frontmatter 顶部带 `doc_type` 字段（`learning` / `trick` / `decision` / `explore`），作为跨子技能的归属判定
-- 文件名统一用 `YYYY-MM-DD-{doc_type}-{slug}.md`——前缀即类型，`ls` 一眼能区分
+- 文件名统一用 `YYYY-MM-DD-{doc_type}-{slug}.md`——日期打头、`doc_type` 段在中间，`ls` 按名字排序就按归档日期排好；要按类型筛就 grep 中间那段
 - 各子技能在 `doc_type` 之外保留自己的专属 frontmatter（learning 的 `track`、trick 的 `type`、decision 的 `category`、explore 的 `type`）
-- 各子技能只认自己的 `doc_type` 和文件名前缀，不读不写别的子技能的文档
+- 各子技能只认自己的 `doc_type` 和文件名里的类型段（`YYYY-MM-DD-{doc_type}-...` 中间那段），不读不写别的子技能的文档
 - `status` 一类通用字段的语义必须和本文件保持一致，不另起一套口径
 - 子技能里如果需要解释状态，只保留该工作流特有的状态流，不重新定义通用语义
 

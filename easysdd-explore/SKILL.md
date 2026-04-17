@@ -103,7 +103,7 @@ python easysdd/tools/search-yaml.py --dir easysdd/compound --filter doc_type=exp
 - [ ] 速答节已给出核心结论（结论前置，不埋在证据之后）
 - [ ] 关键证据 3-8 条，每条标注文件:行号，并说明支撑哪个结论
 - [ ] 涉及多模块协作或 module-overview / spike 类型时，速答节有 Mermaid 图
-- [ ] 文档已归档到 `easysdd/compound/`，文件名前缀 `explore-`
+- [ ] 文档已归档到 `easysdd/compound/`，文件名为 `YYYY-MM-DD-explore-{slug}.md`
 - [ ] 已给出后续建议（路由到哪个子工作流）
 
 ---

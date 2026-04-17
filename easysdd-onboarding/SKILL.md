@@ -34,7 +34,7 @@ easysdd/
 │   └── DESIGN.md               ← 架构总入口骨架（首次创建时为占位模板）
 ├── features/                   ← feature 聚合根（空目录，.gitkeep）
 ├── issues/                     ← issue 聚合根（空目录，.gitkeep）
-├── compound/                   ← 沉淀类统一目录（空目录，.gitkeep）：learning / trick / decision / explore 四种文档按 doc_type + 文件名前缀区分
+├── compound/                   ← 沉淀类统一目录（空目录，.gitkeep）：learning / trick / decision / explore 四种文档按 doc_type + 文件名中间的类型段（YYYY-MM-DD-{doc_type}-{slug}.md）区分
 ├── tools/                      ← 跨工作流共享的脚本工具（由 onboarding 从技能包释放）
 │   ├── search-yaml.py          ← 通用 YAML frontmatter 搜索工具
 │   └── validate-yaml.py        ← YAML 语法校验工具
