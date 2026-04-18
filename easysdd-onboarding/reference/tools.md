@@ -13,13 +13,19 @@
 ### 基本语法
 
 ```bash
-python easysdd/tools/search-yaml.py --dir {目录} [--filter key=value]... [--query "全文关键词"] [--full] [--json]
+python easysdd/tools/search-yaml.py --dir {目录} [--filter key=value]... [--query "全文关键词"] [--sort-by FIELD [--order asc|desc]] [--full] [--json]
 ```
 
 ### filter 语法
 
 - `key=value`：字段精确匹配（大小写不敏感）
 - `key~=value`：字符串字段子串匹配；列表字段元素包含匹配
+
+### 排序语法
+
+- `--sort-by FIELD`：按 frontmatter 字段排序（典型字段：`last_reviewed`、`date`、`updated_at`）
+- `--order desc|asc`：`desc` 默认，新的在前；`asc` 老的在前（查"谁最久没更新"用这个）
+- 字段缺失 / 值为空的文档一律排到最后，不干扰前排结论
 
 ### 常用命令
 
@@ -55,6 +61,11 @@ python easysdd/tools/search-yaml.py --dir easysdd/features --filter doc_type=fea
 # 输出控制
 python easysdd/tools/search-yaml.py --dir easysdd/compound --filter doc_type=decision --filter status=active --full
 python easysdd/tools/search-yaml.py --dir easysdd/compound --filter tags~=llm --json
+
+# 按时间排序
+python easysdd/tools/search-yaml.py --dir easysdd/compound --sort-by date --order desc                     # 最近归档的在前
+python easysdd/tools/search-yaml.py --dir easysdd/library-docs --sort-by last_reviewed --order asc         # 最久没 review 的在前（找陈旧文档）
+python easysdd/tools/search-yaml.py --dir easysdd/guides --filter status=current --sort-by last_reviewed --order asc
 ```
 
 ### 典型使用场景
@@ -66,6 +77,8 @@ python easysdd/tools/search-yaml.py --dir easysdd/compound --filter tags~=llm --
 | 归档落盘后查重叠 | 搜 `easysdd/compound --query "{关键词}" --json`，看有无语义重叠 |
 | 新人了解项目规约 | `--dir easysdd/compound --filter doc_type=decision --filter status=active` |
 | 按技术栈浏览技巧 | `--dir easysdd/compound --filter doc_type=trick --filter language={语言} --filter status=active` |
+| 找最久没 review 的库文档 / 指南 | `--dir {目录} --filter status=current --sort-by last_reviewed --order asc` |
+| 看最近沉淀了哪些经验 | `--dir easysdd/compound --filter doc_type=learning --sort-by date --order desc` |
 
 ---
 

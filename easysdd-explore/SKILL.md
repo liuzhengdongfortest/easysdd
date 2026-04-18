@@ -54,7 +54,16 @@ description: 对仓库做一次定向代码探索，把"提问 → 读代码 →
 1. "你最想先回答的一个问题是什么？"
 2. "希望聚焦哪个模块 / 目录？"
 
-用户描述已清楚就直接进入 Phase 2。
+用户描述已清楚就直接进入 Phase 1.5。
+
+### Phase 1.5：查重叠与意图分流（必做）
+
+按 `easysdd/reference/shared-conventions.md` §6 第 5 / 6 条执行：
+
+- 用户话里含"更新 / 复查 / 某次 explore / 这个模块之前探过"或明确指向某份旧 explore → 直接走**更新或 supersede** 路径。explore 的特性是：**代码已经变了导致旧结论失效**时，旧文档标 `status=outdated` 并新建一份（supersede）；只是补证据 / 收紧结论但核心结论未变时走"更新已有条目"
+- 否则用下面"搜索工具"按关键词 / 模块查一遍，命中相近旧 explore 时先读它，能直接回答就告诉用户"已有一份可用的 explore 在 {路径}，是要复用还是重新探一遍？"
+
+**更新路径**：读旧文档 → 按 Phase 2 补充证据 → 改写速答节 → 写回原文件，补 `updated: YYYY-MM-DD`。
 
 ### Phase 2：证据化探索
 
@@ -72,10 +81,9 @@ description: 对仓库做一次定向代码探索，把"提问 → 读代码 →
 
 ### Phase 4：归档
 
-- 写入 `easysdd/compound/`，命名 `YYYY-MM-DD-explore-{slug}.md`
-- frontmatter 顶部带 `doc_type: explore`（见 `reference.md`）
-- 归档后用搜索工具查有无语义重叠的历史探索
-- 存在冲突或过期记录就提示用户将旧文档标为 `outdated`
+- 新建路径：写入 `easysdd/compound/`，命名 `YYYY-MM-DD-explore-{slug}.md`，frontmatter 顶部带 `doc_type: explore`（见 `reference.md`）
+- 更新路径：写回 Phase 1.5 定位到的原文件，frontmatter 补 `updated: YYYY-MM-DD`
+- supersede 路径：按 `shared-conventions.md` §6 第 5 条处理；旧文档改 `status=outdated` 并加 `superseded-by`
 
 ### Phase 5：给出下一步建议
 

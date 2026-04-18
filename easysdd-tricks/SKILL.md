@@ -58,7 +58,16 @@ easysdd-tricks 是面向问题的**处方性参考库**，回答一个问题：*
 1. "这是关于模式 / 结构、某个库 / 框架的用法，还是操作技巧 / 命令？" → 确定 `type`
 2. "一句话说：遇到什么情况时会用到它？" → 确定 `topic`
 
-用户描述已经够清楚就跳过问题直接进 Phase 2。
+用户描述已经够清楚就跳过问题直接进 Phase 1.5。
+
+### Phase 1.5：查重叠与意图分流（必做）
+
+按 `easysdd/reference/shared-conventions.md` §6 第 5 / 6 条执行：
+
+- 用户话里含"改 / 更新 / 修订 / 补充 / 某条 trick"或明确指向某份旧文档 → 直接走**更新已有条目**路径，不进新建流程；搜索只是确认定位到哪一条
+- 否则用下面"搜索工具"里的 `--query` 查一遍 `topic`，命中语义相近的旧文档时把候选列给用户，让用户选：更新 / supersede / 确实不同主题后再走 Phase 2
+
+**更新已有条目的流程**：直接读取旧文档 → 和用户对齐要改哪几节 → 跳过 Phase 2 完整代码调查（但被改的节涉及的代码要重读确认未失效） → 起草 diff 给用户 review → 写回原文件，补 `updated: YYYY-MM-DD`。
 
 ### Phase 2：代码调查（必做，不可跳过）
 
@@ -108,10 +117,10 @@ easysdd-tricks 是面向问题的**处方性参考库**，回答一个问题：*
 
 ### Phase 5：归档
 
-- 文件写入 `easysdd/compound/`，命名 `YYYY-MM-DD-trick-{slug}.md`
-- frontmatter 顶部带 `doc_type: trick`（见 `reference.md`）
+- 新建路径：文件写入 `easysdd/compound/`，命名 `YYYY-MM-DD-trick-{slug}.md`，frontmatter 顶部带 `doc_type: trick`（见 `reference.md`）
+- 更新路径：写回 Phase 1.5 定位到的原文件，frontmatter 补 `updated: YYYY-MM-DD`
+- supersede 路径：按 `shared-conventions.md` §6 第 5 条处理新旧两份文件
 - 写完后报告完整文件路径
-- 用搜索工具查是否有语义重叠的已有技巧（见下面"搜索工具"）。有的话在新文档末尾 `相关文档` 节列出来，并提示用户"这里有一条类似的记录，请确认是否需要合并，或者其中一条 supersede 另一条"
 
 ### Phase 6：可发现性检查
 

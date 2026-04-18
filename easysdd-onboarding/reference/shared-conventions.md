@@ -13,7 +13,8 @@ onboarding 完成后，项目里应当存在如下骨架（`easysdd-onboarding` 
 ```
 easysdd/
 ├── architecture/          架构中心目录
-│   └── DESIGN.md          架构总入口
+│   ├── DESIGN.md          架构总入口（索引 + 关键架构决定）
+│   └── {slug}.md          子系统 / 模块架构 doc（由 easysdd-architecture-gen 产出）
 ├── features/              feature spec 聚合根
 │   └── YYYY-MM-DD-{slug}/  每个 feature 一个目录
 │       ├── {slug}-brainstorm.md  （可选）
@@ -38,6 +39,7 @@ easysdd/
 - feature 目录：`easysdd/features/YYYY-MM-DD-{slug}/`，日期用创建当天
 - issue 目录：`easysdd/issues/YYYY-MM-DD-{slug}/`，日期用报告当天
 - 沉淀类文档：`easysdd/compound/YYYY-MM-DD-{doc_type}-{slug}.md`，日期用**归档当天**（不是问题发生当天）
+- 架构文档：`easysdd/architecture/{slug}.md`（长效地图，不带日期前缀）；总入口始终叫 `DESIGN.md`
 - `AGENTS.md` 在项目根目录，**不在 `easysdd/` 里**
 
 ### 要改目录结构
@@ -173,7 +175,11 @@ feature-design / issue-analyze / issue-fix 在动手前要到 `easysdd/compound/
 2. **宁缺毋滥**——用户说不出理由的节直接省略，不要 AI 编造听起来合理的内容
 3. **不替用户写实质内容**——AI 负责起草结构和串联语言，实质结论必须来自用户或可追溯的代码证据
 4. **可发现性检查**——写完后检查 `AGENTS.md` / `CLAUDE.md` 里有没有指引 AI 查阅 `easysdd/compound/`，没有就**提示**用户（不替用户改）
-5. **归档后查重叠**——写完后用 `search-yaml.py --query` 查语义重叠的旧文档，有重叠就在新文档末尾 `相关文档` 节列出来，提示用户确认是否合并或 supersede
+5. **起草前先查重叠，而不是归档后**——动手写之前就用 `search-yaml.py --query` 查语义相近的旧文档。有命中就把候选列给用户，让用户在三条路径里选一条：
+   - **更新已有条目**（默认优先）：沿用原文件名和原创建日期，**不新建文件**；修改正文相关节，在 frontmatter 补 `updated: YYYY-MM-DD`（归档当天）；变更超出小修的话在文末加一段"YYYY-MM-DD 更新"简述改了什么
+   - **supersede 已有条目**：旧文档保留原文，把 `status` 改成 `superseded`，加 `superseded-by: {新文档文件名}`，正文顶部加一行 `**[已取代]** 见 {新文档 slug}`；然后新建文档，frontmatter 带 `supersedes: {旧文档文件名}`
+   - **确实是不同主题**：直接新建，在新文档末尾 `相关文档` 节列出已有那条，说明区别
+6. **识别用户意图是"改已有"还是"记新的"**——用户说"改 / 更新 / 修订 / 补充 {某条}"、明确指向某条旧文档、或话题高度重合时，默认走"更新已有条目"路径，不要闷头新建。分不清就问一句，不要猜。
 
 各子技能只认自己的 `doc_type`，不读写别家产物。
 

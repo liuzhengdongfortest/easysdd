@@ -21,6 +21,10 @@ Usage examples:
   # JSON output for AI agent consumption
   python easysdd/tools/search-yaml.py --dir easysdd/compound --filter doc_type=learning --filter track=knowledge --json
 
+  # Sort by a frontmatter date field (works on any ISO-8601 date string, YAML date, or sortable value)
+  python easysdd/tools/search-yaml.py --dir easysdd/library-docs --sort-by last_reviewed --order asc   # oldest first (stalest)
+  python easysdd/tools/search-yaml.py --dir easysdd/compound --sort-by date --order desc              # newest first
+
   # Works on any yaml-frontmatter markdown directory
   python easysdd/tools/search-yaml.py --dir docs/decisions --filter status=accepted
   python easysdd/tools/search-yaml.py --dir content/posts --filter tags~=python --query "asyncio"
@@ -153,6 +157,25 @@ def parse_filter(raw: str) -> Filter:
     return Filter(raw)
 
 
+_MISSING = object()
+
+
+def _sort_key(doc: dict, field: str):
+    """
+    Sort key for --sort-by. Docs missing the field sort to the end regardless
+    of --order. Dates (datetime.date / datetime.datetime) and strings are both
+    normalized to their string form — ISO 8601 date strings sort the same
+    lexicographically as YAML-parsed date objects' isoformat().
+    """
+    val = doc["meta"].get(field, _MISSING)
+    if val is _MISSING or val is None:
+        return (1, "")
+    try:
+        return (0, val.isoformat())  # datetime.date / datetime.datetime
+    except AttributeError:
+        return (0, str(val))
+
+
 def doc_matches(doc: dict, filters: list[Filter], query: str | None) -> bool:
     meta = doc["meta"]
 
@@ -246,6 +269,18 @@ def main() -> None:
         "--json", dest="as_json", action="store_true",
         help="Output results as a JSON array.",
     )
+    parser.add_argument(
+        "--sort-by", metavar="FIELD", dest="sort_by",
+        help=(
+            "Sort results by a frontmatter field (e.g. last_reviewed, date, updated_at). "
+            "ISO-8601 date strings and YAML-parsed dates both sort correctly. "
+            "Docs missing the field are pushed to the end."
+        ),
+    )
+    parser.add_argument(
+        "--order", choices=("asc", "desc"), default="desc",
+        help="Sort order when --sort-by is set. Default: desc (newest first).",
+    )
 
     args = parser.parse_args()
 
@@ -268,6 +303,12 @@ def main() -> None:
     if not results:
         print("No matching documents found.")
         return
+
+    if args.sort_by:
+        present = [d for d in results if args.sort_by in d["meta"] and d["meta"][args.sort_by] is not None]
+        missing = [d for d in results if d not in present]
+        present.sort(key=lambda d: _sort_key(d, args.sort_by), reverse=(args.order == "desc"))
+        results = present + missing
 
     if args.as_json:
         print_json(results, full=args.full)
