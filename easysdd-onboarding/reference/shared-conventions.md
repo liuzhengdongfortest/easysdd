@@ -100,9 +100,10 @@ easysdd/
 ## 2. {slug}-checklist.yaml 生命周期
 
 - `{slug}-checklist.yaml` 是 feature 工作流的唯一执行清单
-- 由 `easysdd-feature-design` 或 `easysdd-feature-fastforward` 在 `{slug}-design.md` 确认通过后一次生成
+- 由 `easysdd-feature-design` 在 `{slug}-design.md` 确认通过后一次生成
+- `easysdd-feature-fastforward` **不生成** checklist（也不写 design doc / acceptance），它是跳过 spec 流程、直接让 AI 写代码的超轻量通道，只做动手前的知识检索引导
 
-### design / fastforward 的职责
+### design 的职责
 
 - 只负责从方案里提取 `steps` 和 `checks`
 - 不预先把任何条目标成完成
