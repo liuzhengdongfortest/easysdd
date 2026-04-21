@@ -24,7 +24,7 @@ Usage examples:
   python easysdd/tools/validate-yaml.py --dir docs/api --json
 
   # Validate the libdoc manifest
-  python easysdd/tools/validate-yaml.py --file docs/api/_manifest.yaml --yaml-only
+  python easysdd/tools/validate-yaml.py --file docs/api/manifest.yaml --yaml-only
 """
 
 import argparse
@@ -251,7 +251,7 @@ def _build_parser() -> argparse.ArgumentParser:
                         help="Output results as JSON")
     parser.add_argument("--yaml-only", action="store_true",
                         help="Treat input as pure YAML (not markdown with frontmatter). "
-                             "Use for .yaml/.yml files like _manifest.yaml.")
+                             "Use for .yaml/.yml files like manifest.yaml.")
     return parser
 
 

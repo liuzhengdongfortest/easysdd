@@ -2,7 +2,7 @@
 
 本文件提供 `easysdd-libdoc` 使用的 manifest、条目文档模板和源码提取清单。
 
-## 1. `_manifest.yaml` 格式
+## 1. `manifest.yaml` 格式
 
 ```yaml
 project: {项目名}
@@ -11,13 +11,8 @@ source_root: {源码根路径}
 last_scanned: YYYY-MM-DD
 
 entries:
-  - entry: button
-    category: 基础组件
-    source_files: [src/components/Button.vue]
-    doc_path: docs/api/button.md
-    status: pending
-    note: ""
-```
+  - {entry: button, category: 基础组件, source_files: [src/components/Button.vue], doc_path: docs/api/button.md, status: pending, note: ""}
+ ```
 
 status 语义：`pending` / `draft` / `current` / `outdated` / `skipped`。
 
