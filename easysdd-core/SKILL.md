@@ -30,8 +30,7 @@ easysdd 把这几类场景各配一套子技能，产物放进统一的目录结
 
 - `easysdd-onboarding` — 把新仓库接入 easysdd 目录结构
 - `easysdd-requirements` — 起草或刷新 `easysdd/requirements/` 下的需求文档（"为什么要有这个能力"）
-- `easysdd-architecture-gen` — 起草或刷新 `easysdd/architecture/` 下的架构文档（"用什么结构实现"）
-- `easysdd-architecture-check` — 检查 design 自洽或 design 与代码一致
+- `easysdd-architecture` — 架构相关一站式：起草新架构文档 / 刷新已有文档 / 做架构体检（含 design 自洽 / design↔代码一致 / architecture 目录多份文档间一致）
 - `easysdd-guidedoc` — 写给外部读者的开发者指南 / 用户指南
 - `easysdd-libdoc` — 为库的公开 API 逐条目生成参考文档
 
@@ -46,8 +45,7 @@ easysdd 把这几类场景各配一套子技能，产物放进统一的目录结
 | BUG / 异常 / 文档错误 | `easysdd-issue` |
 | 摸代码、提问调研 | `easysdd-explore` |
 | 补 / 更新需求文档 | `easysdd-requirements` |
-| 补 / 更新架构文档 | `easysdd-architecture-gen` |
-| 检查 design 一致性 | `easysdd-architecture-check` |
+| 补 / 更新 / 检查架构文档 | `easysdd-architecture` |
 | 技术选型 / 约束 / 规约 | `easysdd-decisions` |
 | 踩坑回顾、经验总结 | `easysdd-learning` |
 | 可复用的编程模式、库用法 | `easysdd-tricks` |

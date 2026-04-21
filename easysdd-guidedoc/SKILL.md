@@ -178,7 +178,7 @@ A: ...
 | `easysdd-feature-acceptance` | 验收后按 `shared-conventions.md` 主动推：接口变更推 dev-guide，用户可见行为变更推 user-guide |
 | `easysdd-feature-design` | 方案第 2 节是 dev-guide 主要信息源；第 1 节是 user-guide 主要信息源 |
 | `easysdd-onboarding` | 新仓库接入后可补全基础文档骨架 |
-| `easysdd-architecture-check` | 检测到 design 与代码不一致时，对应 guide 应同步标 `outdated` |
+| `easysdd-architecture` (check 模式) | 检测到 design 与代码不一致时，对应 guide 应同步标 `outdated` |
 | `easysdd-decisions` | dev-guide 引用的技术选型应来自 decisions，不独立发明 |
 | `easysdd-tricks` | dev-guide 用法示例若与 tricks 重合，交叉引用而不重复写 |
 | `easysdd-libdoc` | guide 引用 libdoc 条目做详细参考；libdoc 是零件参考，guidedoc 是任务教程 |

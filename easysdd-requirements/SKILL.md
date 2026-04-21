@@ -29,7 +29,7 @@ description: 为项目起草或更新 `easysdd/requirements/` 下的需求文档
 
 不适用：
 
-- 用户要写的是"这个系统技术上怎么搭" → 转 `easysdd-architecture-gen`
+- 用户要写的是"这个系统技术上怎么搭" → 转 `easysdd-architecture`
 - 用户要写的是单次 feature 的方案 → 转 `easysdd-feature-design`
 - 用户要拍板一条长期规约 / 选型 → 转 `easysdd-decisions`
 - 用户要写外部读者的"怎么用" → 转 `easysdd-guidedoc`
@@ -195,7 +195,7 @@ tags: []
 
 | 方向 | 关系 |
 |---|---|
-| `easysdd-architecture-gen` 配合 | requirement 描述"为什么要有"、architecture 描述"怎么搭"；architecture doc 的 frontmatter 里用 `implements: [req-slug]` 反向链到承载的需求 |
+| `easysdd-architecture` 配合 | requirement 描述"为什么要有"、architecture 描述"怎么搭"；architecture doc 的 frontmatter 里用 `implements: [req-slug]` 反向链到承载的需求 |
 | `easysdd-feature-design` 上游 | feature 要新增 / 修改一个能力时，先确认对应 requirement 存在或触发本技能新建；纯重构 / 技术债的 feature 不强制要 req |
 | `easysdd-feature-acceptance` 下游 | 验收时发现 feature 改变了某个能力的边界或用户故事 → 触发本技能 `update` 模式刷新对应 req |
 | `easysdd-onboarding` 创建者 | onboarding 阶段建 `easysdd/requirements/` 空目录，之后由本技能填实 |

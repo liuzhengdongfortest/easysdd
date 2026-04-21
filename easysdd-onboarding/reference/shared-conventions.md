@@ -16,7 +16,7 @@ easysdd/
 │   └── {slug}.md          一个能力一份，扁平（由 easysdd-requirements 产出）
 ├── architecture/          架构中心目录（"用什么结构实现"）
 │   ├── DESIGN.md          架构总入口（索引 + 关键架构决定）
-│   └── {slug}.md          子系统 / 模块架构 doc（由 easysdd-architecture-gen 产出）
+│   └── {slug}.md          子系统 / 模块架构 doc（由 easysdd-architecture 产出）
 ├── features/              feature spec 聚合根
 │   └── YYYY-MM-DD-{slug}/  每个 feature 一个目录
 │       ├── {slug}-brainstorm.md  （可选）
@@ -54,7 +54,7 @@ easysdd/
 
 **只升不降**：文档因删除回到 ≤5 份也不折回平铺，避免反复改一堆引用。
 
-**触发时谁负责**：`easysdd-architecture-gen` 在 Phase 6 落盘前主动检查；命中阈值时这次操作要把"本次新加 / 改的这份 + 已有同类全部"一起搬迁，并同步改 `DESIGN.md` 里所有相关链接（搬迁本身要在 Phase 5 一并给用户 review，不偷偷做）。`easysdd-architecture-check` 不主动搬迁，但读 `architecture/` 时若发现某 type 已 ≥6 仍平铺，在报告末尾列为观察项交给用户。
+**触发时谁负责**：`easysdd-architecture` 的 `new` / `update` 模式在 Phase 6 落盘前主动检查；命中阈值时这次操作要把"本次新加 / 改的这份 + 已有同类全部"一起搬迁，并同步改 `DESIGN.md` 里所有相关链接（搬迁本身要在 Phase 5 一并给用户 review，不偷偷做）。`check` 模式不主动搬迁，但读 `architecture/` 时若发现某 type 已 ≥6 仍平铺，在报告末尾列为观察项交给用户。
 
 ### 要改目录结构
 
