@@ -16,6 +16,7 @@ easysdd 把这几类场景各配一套子技能，产物放进统一的目录结
 
 - `easysdd-feature` — 新功能，brainstorm → design → implement → acceptance
 - `easysdd-issue` — 修 bug，report → analyze → fix
+- `easysdd-refactor` — 代码优化（行为不变、结构/性能/可读性变），scan → design → apply
 
 两类都不直接让 AI 写代码，而是先产出 spec（功能方案 / 问题分析），用户 review 后再动手，代码和 doc 一起交付。防的是术语冲突、范围失控、改完不留存档这三种 AI 默认会翻的车。
 
@@ -43,6 +44,7 @@ easysdd 把这几类场景各配一套子技能，产物放进统一的目录结
 |---|---|
 | 新功能 / 新能力 | `easysdd-feature` |
 | BUG / 异常 / 文档错误 | `easysdd-issue` |
+| 代码优化 / 重构 / 重写（行为不变） | `easysdd-refactor` |
 | 摸代码、提问调研 | `easysdd-explore` |
 | 补 / 更新需求文档 | `easysdd-requirements` |
 | 补 / 更新 / 检查架构文档 | `easysdd-architecture` |

@@ -28,6 +28,12 @@ easysdd/
 │       ├── {slug}-report.md
 │       ├── {slug}-analysis.md    （根因不显然时才有）
 │       └── {slug}-fix-note.md
+├── refactors/             refactor spec 聚合根
+│   └── YYYY-MM-DD-{slug}/  每次 refactor 一个目录
+│       ├── {slug}-scan.md
+│       ├── {slug}-refactor-design.md
+│       ├── {slug}-checklist.yaml
+│       └── {slug}-apply-notes.md
 ├── compound/              沉淀类文档统一目录
 │   └── YYYY-MM-DD-{doc_type}-{slug}.md
 │                          doc_type ∈ {learning, trick, decision, explore}
@@ -40,6 +46,7 @@ easysdd/
 - 需求文档：`easysdd/requirements/{slug}.md`（长效能力清单，不带日期前缀，扁平不分组）
 - feature 目录：`easysdd/features/YYYY-MM-DD-{slug}/`，日期用创建当天
 - issue 目录：`easysdd/issues/YYYY-MM-DD-{slug}/`，日期用报告当天
+- refactor 目录：`easysdd/refactors/YYYY-MM-DD-{slug}/`，日期用首次扫描当天
 - 沉淀类文档：`easysdd/compound/YYYY-MM-DD-{doc_type}-{slug}.md`，日期用**归档当天**（不是问题发生当天）
 - 架构文档：`easysdd/architecture/{type}-{slug}.md`（长效地图，不带日期前缀）；总入口始终叫 `DESIGN.md`
 - `AGENTS.md` 在项目根目录，**不在 `easysdd/` 里**
