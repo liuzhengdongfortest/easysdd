@@ -30,9 +30,10 @@ onboarding 完成后仓库里应该存在以下骨架：
 
 ```
 easysdd/
-├── requirements/               ← 需求聚合根（空目录，.gitkeep）："为什么要有这个能力"
+├── requirements/               ← 需求聚合根（空目录，.gitkeep）："为什么要有这个能力"（只记现状）
 ├── architecture/
-│   └── DESIGN.md               ← 架构总入口骨架（首次创建时为占位模板）："用什么结构实现"
+│   └── DESIGN.md               ← 架构总入口骨架（首次创建时为占位模板）："用什么结构实现"（只记现状）
+├── roadmap/                    ← 规划层聚合根（空目录，.gitkeep）："接下来打算怎么走"，独立于现状档案
 ├── features/                   ← feature 聚合根（空目录，.gitkeep）
 ├── issues/                     ← issue 聚合根（空目录，.gitkeep）
 ├── compound/                   ← 沉淀类统一目录（空目录，.gitkeep）：learning / trick / decision / explore 四种文档按 doc_type + 文件名中间的类型段（YYYY-MM-DD-{doc_type}-{slug}.md）区分
@@ -93,6 +94,7 @@ easysdd/
 
 - `easysdd/requirements/.gitkeep`
 - `easysdd/architecture/DESIGN.md`（填入占位模板，见同目录 `reference.md`）
+- `easysdd/roadmap/.gitkeep`
 - `easysdd/features/.gitkeep`
 - `easysdd/issues/.gitkeep`
 - `easysdd/compound/.gitkeep`
@@ -223,7 +225,7 @@ Copy-Item -Recurse -Force <技能包路径>\easysdd-onboarding\reference\*  easy
 
 ## 退出条件
 
-- [ ] `easysdd/` 目录骨架完整（七个子目录都存在：`requirements/`、`architecture/`、`features/`、`issues/`、`compound/`、`tools/`、`reference/`）
+- [ ] `easysdd/` 目录骨架完整（八个子目录都存在：`requirements/`、`architecture/`、`roadmap/`、`features/`、`issues/`、`compound/`、`tools/`、`reference/`）
 - [ ] `easysdd/tools/` 和 `easysdd/reference/` 下的共享脚本和参考文档已从本技能包复制过去（子技能在运行时必须能读到这些文件）
 - [ ] `easysdd/architecture/DESIGN.md` 已建（哪怕是占位内容）
 - [ ] 迁移路径：每一条映射都有明确处理结果（迁移 / 保留原位）
@@ -249,7 +251,7 @@ Copy-Item -Recurse -Force <技能包路径>\easysdd-onboarding\reference\*  easy
 
 ## 相关文档
 
-- `easysdd-core/SKILL.md` — easysdd 家族根技能，负责场景路由和工作流总览
+- `easysdd/reference/system-overview.md` — easysdd 体系总览和场景路由(由 onboarding 从技能包 reference/ 一次性复制到项目)
 - `easysdd/reference/shared-conventions.md` — onboarding 落盘后，目录结构和共享口径的权威版本在这里
 - `AGENTS.md` — 全项目硬约束入口，onboarding 完成后所有子工作流都会读它
 - `easysdd/architecture/DESIGN.md` — onboarding 产出的架构总入口骨架，方案设计阶段会读它

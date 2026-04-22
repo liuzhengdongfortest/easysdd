@@ -12,14 +12,19 @@ onboarding 完成后，项目里应当存在如下骨架（`easysdd-onboarding` 
 
 ```
 easysdd/
-├── requirements/          需求中心目录（"为什么要有这个能力"）
+├── requirements/          需求中心目录（"为什么要有这个能力"，只记现状）
 │   └── {slug}.md          一个能力一份，扁平（由 easysdd-requirements 产出）
-├── architecture/          架构中心目录（"用什么结构实现"）
+├── architecture/          架构中心目录（"用什么结构实现"，只记现状）
 │   ├── DESIGN.md          架构总入口（索引 + 关键架构决定）
 │   └── {slug}.md          子系统 / 模块架构 doc（由 easysdd-architecture 产出）
+├── roadmap/               规划层目录（"接下来打算怎么走"，独立于现状档案）
+│   └── {slug}/            一个大需求一个子目录（由 easysdd-roadmap 产出）
+│       ├── {slug}-roadmap.md      主文档（背景 / 拆解 / 排期思路）
+│       ├── {slug}-items.yaml      机器可读的子 feature 清单，acceptance 回写状态
+│       └── drafts/                可选，草稿 / 调研 / 讨论
 ├── features/              feature spec 聚合根
 │   └── YYYY-MM-DD-{slug}/  每个 feature 一个目录
-│       ├── {slug}-brainstorm.md  （可选）
+│       ├── {slug}-brainstorm.md  （可选，由 easysdd-brainstorm 判为 case 2 时产出）
 │       ├── {slug}-design.md
 │       ├── {slug}-checklist.yaml
 │       └── {slug}-acceptance.md
@@ -44,6 +49,7 @@ easysdd/
 ### 命名规则
 
 - 需求文档：`easysdd/requirements/{slug}.md`（长效能力清单，不带日期前缀，扁平不分组）
+- roadmap 目录：`easysdd/roadmap/{slug}/`（一个大需求一个子目录，不带日期前缀，平铺不嵌套）
 - feature 目录：`easysdd/features/YYYY-MM-DD-{slug}/`，日期用创建当天
 - issue 目录：`easysdd/issues/YYYY-MM-DD-{slug}/`，日期用报告当天
 - refactor 目录：`easysdd/refactors/YYYY-MM-DD-{slug}/`，日期用首次扫描当天
@@ -134,6 +140,54 @@ easysdd/
 
 ---
 
+## 2.5 roadmap ↔ feature 衔接协议
+
+`easysdd/roadmap/{slug}/{slug}-items.yaml` 是"规划层"和"feature 执行层"之间的唯一接口。三个技能共同读写它——**不算跨 skill 耦合**，是 skill 都读写项目共享产物，和都读写 `easysdd/features/` 同理。
+
+### items.yaml 的状态机
+
+```
+planned  → in-progress  （easysdd-feature-design 启动 feature 时改）
+in-progress → done      （easysdd-feature-acceptance 验收完成时改）
+planned  → dropped      （easysdd-roadmap update 模式，用户决定不做时改）
+```
+
+`done` 和 `dropped` 是终态。需要回退重做的要新加一条 slug 略改的条目，不要改终态。
+
+### easysdd-roadmap 的职责
+
+- 生成和维护 `{slug}-roadmap.md` 主文档和 `{slug}-items.yaml` 的结构
+- 把 `planned` 条目改 `dropped`（用户决定放弃时）
+- 不改 `in-progress` / `done` 状态——那两类跃迁由 feature 技能负责
+
+### easysdd-feature-design 的职责
+
+从 roadmap 条目起头 feature 时：
+
+1. 在 `{slug}-design.md` frontmatter 加两个字段：`roadmap: {roadmap-slug}` + `roadmap_item: {子 feature slug}`
+2. 打开 `easysdd/roadmap/{roadmap-slug}/{roadmap-slug}-items.yaml`，把对应条目 `status` 改为 `in-progress`、`feature` 填为 feature 目录名（`YYYY-MM-DD-{slug}`）
+3. 校验 yaml 语法
+
+直接起 feature（不从 roadmap 来）时两个字段留空或省略，不触发任何 roadmap 写操作。
+
+### easysdd-feature-acceptance 的职责
+
+验收流程走到收尾时：
+
+1. 读 `{slug}-design.md` frontmatter 的 `roadmap` / `roadmap_item` 字段
+2. 字段为空 → 跳过 roadmap 回写
+3. 字段有值 → 打开 `easysdd/roadmap/{roadmap}/{roadmap}-items.yaml`，把 `roadmap_item` 对应条目 `status` 改为 `done`
+4. 同步主文档 `{roadmap}-roadmap.md` 子 feature 清单里对应行的显示状态（保持两份一致）
+5. 校验 yaml 语法
+
+回写是**实际写文件的动作**，不是自评"应该不需要改"。验收报告里要明确记录回写结果。
+
+### 最小闭环标记
+
+items.yaml 每份里只有一条 `minimal_loop: true`，标记"这条做完后系统能端到端跑通最窄路径"。feature-design 启动 `minimal_loop: true` 条目时优先级最高——它是整个大需求能不能落地的早期信号。
+
+---
+
 ## 3. 阶段收尾推荐
 
 ### feature-acceptance
@@ -168,7 +222,7 @@ easysdd/
 
 feature-acceptance 和 issue-fix 走完后要把本次产物提交为一个 commit。规则：
 
-- **提交范围**：本次工作改到的代码 + 相关 spec 文档 + 本次实际更新过的架构 doc
+- **提交范围**：本次工作改到的代码 + 相关 spec 文档 + 本次实际更新过的架构 doc + 本次实际更新过的 roadmap items.yaml / 主文档
 - **不该进这个 commit**：和本次工作无关的顺手修改；属于"下次另起一个 feature / issue"的扩大范围
 - **提交前确认**：用户没明确同意就不要 `git commit`
 - **commit message**：一句话说清楚"这次做了什么"，不要把 spec 目录路径贴进 message

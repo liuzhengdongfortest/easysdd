@@ -9,6 +9,8 @@
 doc_type: feature-design
 feature: 2026-04-12-user-auth
 requirement: user-auth-email
+roadmap: permission-system           # 可选：本 feature 从某 roadmap 条目起头时填
+roadmap_item: permission-rbac-core   # 可选：对应 roadmap items.yaml 里的 slug
 status: draft
 summary: 支持用户通过邮箱验证码登录后台
 tags: [auth, email, login]
@@ -18,6 +20,8 @@ tags: [auth, email, login]
 必填字段：`doc_type`、`feature`、`status`、`summary`、`tags`。
 
 `requirement` 字段：填本 feature 对应的 requirement slug（`easysdd/requirements/{slug}.md` 去掉 `.md` 后缀）。纯重构 / 技术债 / 工具链改造类 feature 不新增用户可感能力，允许留空，但要在第 1 节"决策与约束"里明确写"本 feature 不新增能力，无对应 requirement"。
+
+`roadmap` / `roadmap_item` 字段：只在本 feature 从 roadmap 条目起头时填，两个要么都填要么都空。填了的话 acceptance 阶段会据此自动回写 `easysdd/roadmap/{roadmap}/{roadmap}-items.yaml`。直接起 feature（未经 roadmap）不填这两个字段。
 
 ## 2. 顶层节锚点
 
@@ -60,6 +64,7 @@ checks:
 ### `## 1. 决策与约束`
 
 - 需求摘要：做什么、为谁、成功标准、明确不做什么
+- 挂载点清单：逐条列出本 feature 往项目哪些位置挂入（新增 / 修改的路由、模块导入、配置项、数据库字段和表、定时任务、事件订阅、公共 UI 注入点、特性开关等）。每条格式：`{挂载位置}：{具体文件或配置 key} — {动作：新增 / 修改}`。粒度达到"照这份清单逆向可以完整拔除"。没有外部挂载的纯内部改动也要写一句说明
 - 复杂度档位：**只记偏离默认组合的维度**（默认组合在 `easysdd/reference/code-dimensions.md` 末尾的"常用默认组合"表里）。每条格式：`{维度名} = {档位}（偏离默认 {默认档位} 的原因：……）`。全部走默认时写一句"本 feature 走 {场景} 默认档位，无偏离"即可，不抄档位表。
 - 关键决策：选型/取舍/硬约束/被拒方案
 - 前置依赖（仅在步骤 3 评估出"目标文件结构性问题需要先解决"时写）：列出当前 feature 推进所必须先完成的独立 feature / 改动，以及"等前置完成后再推进"的状态
@@ -88,9 +93,18 @@ checks:
 
 ### `## 4. 与项目级架构文档的关系`
 
-- 关联哪些架构 doc
-- 是否要在架构总入口或子系统架构 doc 里补引用
-- 如有，写明补充内容摘要
+这一节的作用是提前预判 acceptance 阶段要把哪些东西**提炼**回 architecture（不是加个 design 链接就算数）。按三类分别列：
+
+- **名词**：本 feature 新增 / 变化的实体、类型、对外契约里，哪些是系统级可见、要进 architecture 的"结构与交互 / 数据与状态"节
+- **动词骨架**：主流程 / 关键编排里跨模块可见的部分，要更新进哪份 architecture doc 的结构图或交互描述
+- **跨层纪律**：本 feature 引入的跨 feature 稳定的约束（错误语义、幂等性、扩展点、挂载点规约等），要补进哪份 architecture doc 的"已知约束"节
+
+外加：
+
+- 关联哪些已有架构 doc（读者做根因分析 / 下一轮 feature 设计时要一起看的）
+- 架构总入口是否需要新增对本 feature 的描述（注意是描述，不是只贴 design 链接）
+
+纯模块内部、对外不可见的改动，这一节可以写"本 feature 改动局限在 {模块} 内部，无系统级可见变化"，由 acceptance 核实后跳过归并。
 
 ## 5. review 提示
 

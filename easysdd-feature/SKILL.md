@@ -10,8 +10,10 @@ description: 做新功能开发时进入这套子流程——把"加个 X 能力
 整套流程是这样的：
 
 ```
-(想法还模糊时先 brainstorm) → 方案设计（含测试设计）→ 分步实现 → 验收闭环
+(想法还模糊时先去 easysdd-brainstorm 做分诊) → 方案设计（含测试设计）→ 分步实现 → 验收闭环
 ```
+
+brainstorm 本身不在 feature 流程内部——它是讨论层的统一入口，会先分诊：你是 case 1（其实已经够清楚，直接进 design）、case 2（小需求方向定了，在 feature 里继续讨论并落 `{slug}-brainstorm.md`）、还是 case 3（大需求装不进一个 feature，移交给 `easysdd-roadmap` 拆解）。只有 case 2 才会真的在 `easysdd/features/{feature}/` 里产出 brainstorm note。
 
 本技能本身不写代码、不写文档，只做一件事：看一下当前 feature 走到哪一步了，告诉用户该触发哪个子技能。
 
@@ -25,7 +27,7 @@ description: 做新功能开发时进入这套子流程——把"加个 X 能力
 easysdd/
 └── features/
     └── {feature}/
-        ├── {slug}-brainstorm.md       ← 阶段 0 的产物（可选，AI 引导对话沉淀）
+        ├── {slug}-brainstorm.md       ← 阶段 0 的产物（可选，仅 brainstorm 判为 case 2 时才落盘）
         ├── {slug}-intent.md           ← 阶段 1 的可选前置草稿（用户自己写的半成品方案）
         ├── {slug}-design.md           ← 阶段 1 的方案文件（带 YAML frontmatter + 测试设计）
         ├── {slug}-checklist.yaml      ← 阶段 1 顺手生成，2/3 阶段更新
@@ -47,14 +49,14 @@ easysdd/
 
 | 阶段 | 子技能 | 产出 | 谁主导 |
 |---|---|---|---|
-| 0 brainstorm（可选） | `easysdd-feature-brainstorm` | {slug}-brainstorm.md | AI 做思考伙伴，用户拍板 |
+| 0 brainstorm（可选，独立入口） | `easysdd-brainstorm` | case 2 时产出 {slug}-brainstorm.md；case 1 / 3 不落盘 | AI 做思考伙伴，用户拍板 |
 | 1 方案设计 | `easysdd-feature-design` | {slug}-design.md + {slug}-checklist.yaml | AI 起草，用户整体 review |
 | 2 分步实现 | `easysdd-feature-implement` | 代码 + 阶段汇报 | AI 按方案执行 |
 | 3 验收闭环 | `easysdd-feature-acceptance` | {slug}-acceptance.md | AI 逐层核对，用户终审 |
 
 阶段之间有人工 checkpoint。为什么要这样卡？一是让用户在每个阶段结束时有一次明确的把关机会，二是防止 AI 一口气从需求跑到代码、跑出来用户才发现走偏了。所以默认情况下，上一个阶段没拿到用户明确放行，下一个阶段就别开始。
 
-阶段 0 是可选的——只有想法明显模糊时才走。如果用户已经能清楚说出"做什么、为谁做、怎么算成功"，直接从阶段 1 开始更省事。
+阶段 0 是可选的，且是 feature 流程的**外部入口**——`easysdd-brainstorm` 同时服务 feature 和 roadmap。只有想法明显模糊时才走；已经能清楚说出"做什么、为谁做、怎么算成功"时直接从阶段 1 开始。brainstorm 判为 case 3（大需求）时讨论会被移交给 `easysdd-roadmap`，不再回到 feature 流程——等 roadmap 拆出子 feature 之后，每条子 feature 才会从 `easysdd-feature-design` 的"从 roadmap 条目起头"入口进来。
 
 ### Fastforward 模式
 
@@ -78,16 +80,18 @@ fastforward 的 `{slug}-design.md` 跟标准流程共用同一个 feature 目录
 
 | 当前状态 | 触发哪个子技能 |
 |---|---|
-| 想法模糊，说不清真问题 / 边界 / 不做什么 | 问一下要不要先走 brainstorm（判断方法见下） |
+| 想法模糊，说不清真问题 / 边界 / 不做什么 | `easysdd-brainstorm`（判断方法见下） |
 | 想法清晰（知道做什么、为谁、怎么算成功） | `easysdd-feature-design` |
 | 用户说"开一个新需求 / 起个草稿 / 新建一个 feature"，想自己写半成品方案 | `easysdd-feature-design` 的"初始化模式"（建目录 + 空 `{slug}-intent.md`，让用户填完再回来） |
-| 用户主动说"先 brainstorm 一下" | `easysdd-feature-brainstorm` |
+| 用户主动说"先 brainstorm 一下"、"有个想法没想清楚" | `easysdd-brainstorm` |
 | `{slug}-intent.md` 已存在且填好，用户说可以进设计了 | `easysdd-feature-design`（读 intent 作输入） |
 | 用户说"快速模式"、"fastforward"等 | `easysdd-feature-fastforward` |
 | `{slug}-brainstorm.md` 已存在，用户说可以进设计了 | `easysdd-feature-design` |
 | `{slug}-design.md` 已 approved、代码还没动 | `easysdd-feature-implement` |
 | fastforward `{slug}-design.md` 已确认 | `easysdd-feature-implement` |
 | 代码已写完，要做验收 | `easysdd-feature-acceptance` |
+| 用户说的是"我想要一个 X 系统"这种大需求 | 转 `easysdd-brainstorm` 分诊（大概率判为 case 3 → `easysdd-roadmap`） |
+| roadmap 里某条子 feature 该启动了 | `easysdd-feature-design` 的"从 roadmap 条目起头"入口 |
 | 不确定 `{slug}-design.md` 是否完整 | 自己读一遍，按上面对号入座 |
 
 ### 怎么判断用户该不该走阶段 0
@@ -98,13 +102,13 @@ fastforward 的 `{slug}-design.md` 跟标准流程共用同一个 feature 目录
 - 用户感知的核心行为是什么
 - 有没有一条明确的"不做什么"
 
-三项有一项模糊，brainstorm 就值得走。但别强推——如果用户明确说"我想清楚了，直接做设计"，就尊重他的判断。不确定的时候问一句让用户选。宁可漏判（让用户直接进设计），也别误判（逼一个想清楚的用户做他觉得多余的发散）。
+三项有一项模糊，brainstorm 就值得走。但别强推——用户明确说"我想清楚了，直接做设计"就尊重他的判断。不确定时问一句让用户选。宁可漏判（让用户直接进设计），也别误判（逼一个想清楚的用户做 TA 觉得多余的发散）。
 
 ### brainstorm 和 intent 怎么选
 
 两者都是 design 的前置，区别在**谁在主导收敛**：
 
-- brainstorm：用户脑子里还模糊，希望通过对话想清楚，AI 问用户答，产出是对话沉淀的 `{slug}-brainstorm.md`
+- brainstorm：用户脑子里还模糊，希望通过对话想清楚，AI 问用户答。**注意**：brainstorm 是独立入口，会先分诊；判为 case 3（大需求）时讨论会被移交给 `easysdd-roadmap`，不会回到 feature 流程。只有 case 2（小需求）才产出 `{slug}-brainstorm.md`
 - intent：用户自己已经想好大致做法（比如一段 100 字的描述 + 相关数据结构），只是懒得口述，直接写成 `{slug}-intent.md` 给 AI 读
 
 用户说"开一个新需求"这种模糊触发时，默认问一句"你想先聊清楚（brainstorm）还是自己写草稿（intent）？"，别自己挑一个推进。
@@ -122,7 +126,7 @@ fastforward 的 `{slug}-design.md` 跟标准流程共用同一个 feature 目录
 
 ## 相关文档
 
-- `easysdd-core/SKILL.md` — easysdd 家族根技能，场景路由在那里
+- `easysdd/reference/system-overview.md` — easysdd 体系总览和场景路由
 - `easysdd/reference/shared-conventions.md` — 跨阶段共享口径、目录结构、{slug}-checklist.yaml 生命周期
 - `AGENTS.md` — 全项目代码规范，feature 实现时同样遵守
 - 项目架构总入口 — 方案设计阶段需要查

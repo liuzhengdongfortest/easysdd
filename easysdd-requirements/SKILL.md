@@ -7,6 +7,8 @@ description: 为项目起草或更新 `easysdd/requirements/` 下的需求文档
 
 `easysdd/requirements/` 是项目的"能力清单"——每份文档描述**一个能力因什么问题而产生、怎么解决、边界在哪**，写成人话，非技术读者也能扫一眼看懂。架构文档讲"怎么搭"，需求文档讲"为什么要有这个"。两者分开记录的好处是：单独讨论需求时不被实现细节干扰，单独讨论架构时也不被产品视角牵着走。
 
+**requirement 是现状档案，不是计划档案**。只描述"这个能力现在已经存在、边界长这样"。默认只在 feature-acceptance 时跟着代码一起刷新（feature 实现改了边界 / 用户故事，回写到 req），必要时才由本技能主动 update 模式更新。**不记"打算做什么"、不记"下一步会加什么"**——那些属于 `easysdd-roadmap` 的规划层。用户说"我想要 X 能力"但 X 还没做出来时，不要在这里开新 req——要么能力已经在做且需要先把目标态写下来指导实现（走 roadmap 拆解 + 后续 feature-acceptance 回写 req），要么直接走 roadmap。
+
 需求文档的价值在于**扫一眼就能抓到重点**——用户故事在最前面、痛点和解法各一段短的、边界用列表。AI 写需求文档最容易出的几种问题都会破坏"扫一眼就抓到重点"这个特性：
 
 - 写成 PRD 格式（字段堆）——读者要一格一格读才能拼出全貌。
@@ -33,6 +35,7 @@ description: 为项目起草或更新 `easysdd/requirements/` 下的需求文档
 - 用户要写的是单次 feature 的方案 → 转 `easysdd-feature-design`
 - 用户要拍板一条长期规约 / 选型 → 转 `easysdd-decisions`
 - 用户要写外部读者的"怎么用" → 转 `easysdd-guidedoc`
+- 用户抛出一块大需求想拆成几轮做（"我想要一个 X 系统"）→ 转 `easysdd-roadmap`——那是规划层，不往 req 里塞"待做能力"
 
 ---
 
@@ -197,13 +200,15 @@ tags: []
 |---|---|
 | `easysdd-architecture` 配合 | requirement 描述"为什么要有"、architecture 描述"怎么搭"；architecture doc 的 frontmatter 里用 `implements: [req-slug]` 反向链到承载的需求 |
 | `easysdd-feature-design` 上游 | feature 要新增 / 修改一个能力时，先确认对应 requirement 存在或触发本技能新建；纯重构 / 技术债的 feature 不强制要 req |
-| `easysdd-feature-acceptance` 下游 | 验收时发现 feature 改变了某个能力的边界或用户故事 → 触发本技能 `update` 模式刷新对应 req |
+| `easysdd-feature-acceptance` 下游 | 验收时发现 feature 改变了某个能力的边界或用户故事 → 触发本技能 `update` 模式刷新对应 req（现状档案跟着代码同步的主路径） |
+| `easysdd-roadmap` 配合 | req 记"这个能力现在是什么"，roadmap 记"打算怎么把它继续推进 / 从无到有做出来"。roadmap 拆解过程里如果发现缺 req，让用户先触发本技能；roadmap 不改 req |
 | `easysdd-onboarding` 创建者 | onboarding 阶段建 `easysdd/requirements/` 空目录，之后由本技能填实 |
 
 ---
 
 ## 常见错误
 
+- 把"打算做的事"写进来：req 是现状档案，没做的能力归 roadmap，不在这里起新 req
 - 写成 PRD 字段堆：读者要一格一格读才能拼出全貌
 - 语气像在上课："本能力旨在提供……"这种开头立刻扔掉
 - 标题用比喻："修 bug 时让 AI 当你的第一个读者" < "修 bug 时先探索和分析"

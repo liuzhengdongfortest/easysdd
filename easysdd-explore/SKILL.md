@@ -1,6 +1,6 @@
 ---
 name: easysdd-explore
-description: 对仓库做一次定向代码探索，把"提问 → 读代码 → 得结论"的过程沉淀为可检索证据，下次同类问题直接复用。三种类型：question（围绕一个具体问题查代码并给结论）、module-overview（梳理某模块结构 / 边界 / 入口 / 依赖）、spike（对多个可能方向做轻量技术探查，不做最终决策）。触发场景：用户说"先 explore 一下"、"这个仓库里 X 怎么实现"、"快速熟悉这个模块"、"把探索结果存档"。和 learning / tricks / decisions 怎么区分看 `easysdd` 根技能。
+description: 对仓库做一次定向代码探索，把"提问 → 读代码 → 得结论"的过程沉淀为可检索证据，下次同类问题直接复用。三种类型：question（围绕一个具体问题查代码并给结论）、module-overview（梳理某模块结构 / 边界 / 入口 / 依赖）、spike（对多个可能方向做轻量技术探查，不做最终决策）。触发场景：用户说"先 explore 一下"、"这个仓库里 X 怎么实现"、"快速熟悉这个模块"、"把探索结果存档"。和 learning / tricks / decisions 怎么区分看 `easysdd/reference/system-overview.md`。
 ---
 
 # easysdd-explore
@@ -16,7 +16,7 @@ description: 对仓库做一次定向代码探索，把"提问 → 读代码 →
 - feature-design / issue-analyze / issue-fix 前先补一轮证据化探索
 - 技术方向还在讨论，需要先做轻量 spike（只探索，不拍板）
 
-本技能只负责"看到了什么"的证据化记录。如果用户的意图其实是别的（拍板、处方、修 bug），由 easysdd 根技能路由到对应子技能。
+本技能只负责"看到了什么"的证据化记录。如果用户的意图其实是别的（拍板、处方、修 bug），让用户按场景选对应子技能，不要在这里自作主张接过去。
 
 > 共享路径与命名约定看 `easysdd/reference/shared-conventions.md`。本技能的产物写入 `easysdd/compound/`，文件命名 `YYYY-MM-DD-explore-{slug}.md`，frontmatter 带 `doc_type: explore`。
 
@@ -89,7 +89,7 @@ description: 对仓库做一次定向代码探索，把"提问 → 读代码 →
 
 ### Phase 5：给出下一步建议
 
-证据已经收齐后，一句话提示用户接下来可能的方向（比如"要不要基于这份 explore 去设计方案"）。用户说"不用"就跳过，不要把用户拖进新的工作流——路由由根技能负责。
+证据已经收齐后，一句话提示用户接下来可能的方向（比如"要不要基于这份 explore 去设计方案"）。用户说"不用"就跳过，不要把用户拖进新的工作流——下一步工作流由用户自己决定。
 
 ---
 

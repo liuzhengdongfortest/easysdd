@@ -237,7 +237,7 @@ refactor: {YYYY-MM-DD}-{slug}
 
 ## 相关文档
 
-- `easysdd-core/SKILL.md` — easysdd 家族根技能
+- `easysdd/reference/system-overview.md` — easysdd 体系总览
 - `easysdd-refactor-fastforward/SKILL.md` — 小重构超轻量通道
 - `reference/scan-checklist-format.md` — scan 清单条目的字段、顺序、硬约束、反模式样本
 - `reference/refusal-routing.md` — scan 前置检查 7 条 + 路由表 + 拒绝输出格式

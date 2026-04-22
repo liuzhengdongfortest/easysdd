@@ -27,11 +27,15 @@ EasySDD 把这几类场景各配一套子技能，产物放进统一的目录结
 
 ---
 
-## 技能分成三部分
+## 技能分成四部分
+
+### 讨论层：想法还模糊时的统一入口
+
+- **`easysdd-brainstorm`** — 用一两轮对话做分诊：case 1（已经够清楚，直接 feature-design）、case 2（小需求方向定了，在 feature 里继续讨论并落 `{slug}-brainstorm.md`）、case 3（大需求装不进一个 feature，移交给 roadmap）。brainstorm 自己不产出 design 也不做拆解——它只决定这次讨论该去哪个下游
 
 ### 做事：从想法到上线，从报告到修好
 
-- **`easysdd-feature`** — 新功能，`brainstorm → design → implement → acceptance`
+- **`easysdd-feature`** — 新功能，`(brainstorm 可选) → design → implement → acceptance`
 - **`easysdd-issue`** — 修 bug，`report → analyze → fix`
 
 两类都不直接让 AI 写代码，而是先产出 spec（功能方案 / 问题分析），用户 review 后再动手，代码和 doc 一起交付。针对的是 AI 默认会出的三类问题：术语冲突、范围失控、改完不留存档。
@@ -52,8 +56,9 @@ EasySDD 把这几类场景各配一套子技能，产物放进统一的目录结
 ### 辅助：周边工具
 
 - **`easysdd-onboarding`** — 把新仓库接入 easysdd 目录结构，空仓库和已有零散文档的仓库都能接
-- **`easysdd-requirements`** — 起草或刷新 `easysdd/requirements/` 下的需求文档（"为什么要有这个能力"）
-- **`easysdd-architecture`** — 架构一站式：起草新架构文档 / 刷新已有文档 / 做架构体检（design 自洽 / design↔代码一致 / architecture 目录多份文档间一致）
+- **`easysdd-requirements`** — 起草或刷新 `easysdd/requirements/` 下的需求文档（"为什么要有这个能力"，只记现状）
+- **`easysdd-architecture`** — 架构一站式：起草新架构文档 / 刷新已有文档 / 做架构体检（design 自洽 / design↔代码一致 / architecture 目录多份文档间一致），只记现状
+- **`easysdd-roadmap`** — 把装不进单个 feature 的大需求拆成带依赖和状态的子 feature 清单，作为后续多次 feature 流程的种子和排期依据；独立于需求 / 架构档案
 - **`easysdd-guidedoc`** — 写给外部读者的开发者指南 / 用户指南
 - **`easysdd-libdoc`** — 为库的公开 API 逐条目生成参考文档
 
@@ -61,15 +66,17 @@ EasySDD 把这几类场景各配一套子技能，产物放进统一的目录结
 
 ## 场景路由
 
-仓库里还没有 `easysdd/` 目录，先用 `easysdd-onboarding` 初始化目录结构。之后按场景选子技能，不确定用哪个也没关系，根技能 `easysdd-core` 会自己路由。
+仓库里还没有 `easysdd/` 目录，先用 `easysdd-onboarding` 初始化目录结构。之后按场景选子技能。
 
 | 场景 | 子技能 |
 |---|---|
+| 想法还模糊 / "有个想法没想清楚" / "先聊聊" | `easysdd-brainstorm` |
 | 新功能 / 新能力 | `easysdd-feature` |
 | BUG / 异常 / 文档错误 | `easysdd-issue` |
 | 读代码、提问调研 | `easysdd-explore` |
 | 补 / 更新需求文档 | `easysdd-requirements` |
 | 补 / 更新 / 检查架构文档 | `easysdd-architecture` |
+| 大需求拆解 / 排期规划 | `easysdd-roadmap` |
 | 技术选型 / 约束 / 规约 | `easysdd-decisions` |
 | 踩坑回顾、经验总结 | `easysdd-learning` |
 | 可复用的编程模式、库用法 | `easysdd-tricks` |
@@ -80,9 +87,9 @@ EasySDD 把这几类场景各配一套子技能，产物放进统一的目录结
 
 ## EasySDD 跟其他框架不一样在哪
 
-### 三层分离：需求 / 架构 / 特性
+### 四层分离：需求 / 架构 / 规划 / 特性
 
-`requirements/` 管"为什么要做"，`architecture/` 管"系统长什么样"，`features/` 管"这次具体加什么"。三层解耦，改一层不会牵动另一层。
+`requirements/` 管"为什么要做"、`architecture/` 管"系统现在长什么样"（两者只记现状），`roadmap/` 管"接下来打算分几步走"，`features/` 管"这次具体加什么"。四层解耦，改一层不会牵动另一层——大需求拆解不动现状档案、验收回写不动规划层边界。
 
 ### 架构文档永远跟得上代码
 
@@ -141,7 +148,7 @@ npx skills add https://github.com/liuzhengdongfortest/easysdd
 >
 > 「这里有个 bug，走 easysdd-issue 流程」
 
-不知道用哪个子技能也没关系，根技能 `easysdd-core` 会自己路由。
+不知道用哪个子技能也没关系，把场景描述清楚，Claude 会按上面的路由表自己选。
 
 ---
 

@@ -69,7 +69,7 @@ implements: []   # 这块架构承载的 requirement slug 列表（`easysdd/requ
 
 ## 6. 已知约束 / 边界情况
 
-本模块现在有哪些"不能动 / 动了要小心"的硬约束，以及它们的来源（来自 AGENTS.md / 某条 decision / 某次 learning）。
+本模块现在有哪些"不能动 / 动了要小心"的硬约束，以及它们的来源（AGENTS.md / decision / learning 等项目里记载硬约束的位置）。
 
 ## 7. 相关文档
 
