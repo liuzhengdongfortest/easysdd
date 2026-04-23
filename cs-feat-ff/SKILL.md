@@ -32,7 +32,7 @@ python codestable/tools/search-yaml.py --dir codestable/compound --filter doc_ty
 
 ### `codestable/architecture/` — 架构全景
 
-`DESIGN.md` 是总入口，子系统拆到同目录下的其他 md 文件里。改到跨模块的东西前先看一眼相关子系统文档，避免违反既定边界。直接 `Read` 就行。
+`ARCHITECTURE.md` 是总入口，子系统拆到同目录下的其他 md 文件里。改到跨模块的东西前先看一眼相关子系统文档，避免违反既定边界。直接 `Read` 就行。
 
 ### `codestable/tools/` — 共享脚本
 

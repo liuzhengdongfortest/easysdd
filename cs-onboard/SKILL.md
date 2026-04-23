@@ -32,7 +32,7 @@ onboarding 完成后仓库里应该存在以下骨架：
 codestable/
 ├── requirements/               ← 需求聚合根（空目录，.gitkeep）："为什么要有这个能力"（只记现状）
 ├── architecture/
-│   └── DESIGN.md               ← 架构总入口骨架（首次创建时为占位模板）："用什么结构实现"（只记现状）
+│   └── ARCHITECTURE.md         ← 架构总入口骨架（首次创建时为占位模板）："用什么结构实现"（只记现状）
 ├── roadmap/                    ← 规划层聚合根（空目录，.gitkeep）："接下来打算怎么走"，独立于现状档案
 ├── features/                   ← feature 聚合根（空目录，.gitkeep）
 ├── issues/                     ← issue 聚合根（空目录，.gitkeep）
@@ -94,7 +94,7 @@ codestable/
 
 说明即将创建的内容（见上面"标准骨架"），问用户：
 
-- 项目名 / 简介（用于填入 `DESIGN.md` 占位模板）
+- 项目名 / 简介（用于填入 `ARCHITECTURE.md` 占位模板）
 - `AGENTS.md` 是否已有，没有的话是否现在就填——想现在填就引导他填关键字段；想之后再填就提醒他 feature/issue 工作流启动时会读它
 
 **步骤 2：创建目录骨架**
@@ -102,7 +102,7 @@ codestable/
 按下面顺序执行，每步完成后继续，**不等用户逐步确认**——骨架是整体一次性的，逐步确认反而打断节奏：
 
 - `codestable/requirements/.gitkeep`
-- `codestable/architecture/DESIGN.md`（填入占位模板，见同目录 `reference.md`）
+- `codestable/architecture/ARCHITECTURE.md`（填入占位模板，见同目录 `reference.md`）
 - `codestable/roadmap/.gitkeep`
 - `codestable/features/.gitkeep`
 - `codestable/issues/.gitkeep`
@@ -146,7 +146,7 @@ codestable/
 
 | 现有文件 | 推测内容类型 | 建议归入 CodeStable 位置 | 置信度 |
 |---|---|---|---|
-| `docs/DESIGN.md` | 项目架构文档 | `codestable/architecture/DESIGN.md` | 高 |
+| `docs/DESIGN.md` | 项目架构文档 | `codestable/architecture/ARCHITECTURE.md` | 高 |
 | `docs/feature-auth.md` | 某功能的设计稿 | `codestable/features/YYYY-MM-DD-auth/auth-design.md` | 中 |
 | `SPEC.md` | 功能需求文档？ | 需用户确认 | 低 |
 | ... | ... | ... | ... |
@@ -228,7 +228,7 @@ Copy-Item -Recurse -Force <技能包路径>\cs-onboard\reference\*  CodeStable\r
 
 ## 骨架文件模板
 
-`DESIGN.md` 占位模板和 `AGENTS.md` 最小模板已拆到同目录 `reference.md`。本技能正文只保留流程，不再内嵌长模板。
+`ARCHITECTURE.md` 占位模板和 `AGENTS.md` 最小模板已拆到同目录 `reference.md`。本技能正文只保留流程，不再内嵌长模板。
 
 ---
 
@@ -236,7 +236,7 @@ Copy-Item -Recurse -Force <技能包路径>\cs-onboard\reference\*  CodeStable\r
 
 - [ ] `codestable/` 目录骨架完整（八个子目录都存在：`requirements/`、`architecture/`、`roadmap/`、`features/`、`issues/`、`compound/`、`tools/`、`reference/`）
 - [ ] `codestable/tools/` 和 `codestable/reference/` 下的共享脚本和参考文档已从本技能包复制过去（子技能在运行时必须能读到这些文件）
-- [ ] `codestable/architecture/DESIGN.md` 已建（哪怕是占位内容）
+- [ ] `codestable/architecture/ARCHITECTURE.md` 已建（哪怕是占位内容）
 - [ ] 迁移路径：每一条映射都有明确处理结果（迁移 / 保留原位）
 - [ ] 迁移路径：没有未经用户确认就移动的文件
 - [ ] `AGENTS.md` 状态已明确（存在 / 用户知道需要补）
@@ -263,4 +263,4 @@ Copy-Item -Recurse -Force <技能包路径>\cs-onboard\reference\*  CodeStable\r
 - `codestable/reference/system-overview.md` — CodeStable 体系总览和场景路由(由 onboarding 从技能包 reference/ 一次性复制到项目)
 - `codestable/reference/shared-conventions.md` — onboarding 落盘后，目录结构和共享口径的权威版本在这里
 - `AGENTS.md` — 全项目硬约束入口，onboarding 完成后所有子工作流都会读它
-- `codestable/architecture/DESIGN.md` — onboarding 产出的架构总入口骨架，方案设计阶段会读它
+- `codestable/architecture/ARCHITECTURE.md` — onboarding 产出的架构总入口骨架，方案设计阶段会读它

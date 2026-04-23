@@ -4,7 +4,7 @@
 
 ---
 
-## 1. 架构文档结构（new / update 模式产出）
+## 1. 架构文档结构（backfill / update 模式产出）
 
 ### 1.1 frontmatter
 
@@ -85,7 +85,7 @@ implements: []   # 这块架构承载的 requirement slug 列表（`codestable/r
 
 ---
 
-## 2. new / update 自查清单
+## 2. backfill / update 自查清单
 
 用户 review 前，自己先把下面这组检查过一遍。每一条都针对一种 AI 默认会犯的错：
 
@@ -181,7 +181,7 @@ implements: []   # 这块架构承载的 requirement slug 列表（`codestable/r
 
 ---
 
-## 5. compound 检索命令（new / update 用）
+## 5. compound 检索命令（backfill / update 用）
 
 ```bash
 python codestable/tools/search-yaml.py --dir codestable/compound --filter doc_type=decision --filter status=active --query "{模块关键词}"

@@ -1,13 +1,13 @@
 ---
 name: cs-req
-description: 为项目起草或更新 `codestable/requirements/` 下的需求文档——用**用户故事 + 平铺语言**描述一个能力"因什么而产生、如何解决、边界在哪"，让非技术读者也能扫一眼看懂系统突出的地方。和 architecture 分层：requirement 是"问题空间"（为什么要有这个能力），architecture 是"解空间"（用什么结构实现它）。两种模式：new（从零起草一份新需求 doc）、update（按新素材或实现变化刷新已有 doc）。单目标规则——一次只动一份文档。触发场景：用户说"补一份需求 doc"、"把这块能力的需求写下来"、"更新 requirements 目录"，或 feature-design 阶段发现本次要实现的能力还没有对应的 requirement。
+description: 为项目维护 `codestable/requirements/` 下的需求文档——用**用户故事 + 平铺语言**描述一个已经存在的能力"因什么而产生、如何解决、边界在哪"，让非技术读者也能扫一眼看懂系统突出的地方。和 architecture 分层：requirement 是"问题空间"（为什么要有这个能力），architecture 是"解空间"（用什么结构实现它）。**req 是现状档案，只记已经存在、已有边界的能力，不记"打算做什么 / 下一步会加什么"——那些属于 cs-roadmap**。主路径是 feature-acceptance 跟着代码同步回写；本技能是 backup 主动入口，两种模式：`update`（按新素材或实现变化刷新已有 doc，最常用）、`backfill`（给已经存在但从没写过档的能力补一份 doc）。单目标规则——一次只动一份文档。触发场景：用户说"刷新 requirements 目录"、"这份 req 和现在代码对不上了"、"这块已经在跑的能力一直没写 req，补上"，或 feature-design 阶段发现要实现的能力还没有对应的 requirement。用户说"我想要 X 能力"但 X 还没做 → 不走本技能，转 cs-roadmap。
 ---
 
 # cs-req
 
 `codestable/requirements/` 是项目的"能力清单"——每份文档描述**一个能力因什么问题而产生、怎么解决、边界在哪**，写成人话，非技术读者也能扫一眼看懂。架构文档讲"怎么搭"，需求文档讲"为什么要有这个"。两者分开记录的好处是：单独讨论需求时不被实现细节干扰，单独讨论架构时也不被产品视角牵着走。
 
-**requirement 是现状档案，不是计划档案**。只描述"这个能力现在已经存在、边界长这样"。默认只在 feature-acceptance 时跟着代码一起刷新（feature 实现改了边界 / 用户故事，回写到 req），必要时才由本技能主动 update 模式更新。**不记"打算做什么"、不记"下一步会加什么"**——那些属于 `cs-roadmap` 的规划层。用户说"我想要 X 能力"但 X 还没做出来时，不要在这里开新 req——要么能力已经在做且需要先把目标态写下来指导实现（走 roadmap 拆解 + 后续 feature-acceptance 回写 req），要么直接走 roadmap。
+**requirement 是现状档案，不是计划档案**。只描述"这个能力现在已经存在、边界长这样"。默认只在 feature-acceptance 时跟着代码一起刷新（feature 实现改了边界 / 用户故事，回写到 req），必要时才由本技能主动 `update`（刷新已有 doc）或 `backfill`（给已存在但没写过档的能力补一份）。**不记"打算做什么"、不记"下一步会加什么"**——那些属于 `cs-roadmap` 的规划层。用户说"我想要 X 能力"但 X 还没做出来时，不要在这里开新 req——要么能力已经在做且需要先把目标态写下来指导实现（走 roadmap 拆解 + 后续 feature-acceptance 回写 req），要么直接走 roadmap。
 
 需求文档的价值在于**扫一眼就能抓到重点**——用户故事在最前面、痛点和解法各一段短的、边界用列表。AI 写需求文档最容易出的几种问题都会破坏"扫一眼就抓到重点"这个特性：
 
@@ -25,9 +25,9 @@ description: 为项目起草或更新 `codestable/requirements/` 下的需求文
 
 ## 适用场景
 
-- 有一个能力 / 用户场景缺需求文档，想补一份
-- 能力演进了（新增用户故事 / 痛点表述过时 / 边界变化），要刷新
-- feature-design 阶段发现本次要实现的能力没有对应的 requirement，先停下来补上再继续
+- 一个**已经在跑**的能力从没写过 req，想补一份（`backfill`）
+- 能力演进了（新增用户故事 / 痛点表述过时 / 边界变化），要刷新（`update`）
+- feature-design 阶段发现本次要实现的能力没有对应的 requirement，先停下来补上再继续（`backfill`）
 
 不适用：
 
@@ -43,7 +43,7 @@ description: 为项目起草或更新 `codestable/requirements/` 下的需求文
 
 每次只动一份文档，二选一：
 
-- **new**：起草一份新需求文档（`codestable/requirements/{slug}.md`）
+- **backfill**：给一个已经存在、但从没写过档的能力补一份需求文档（`codestable/requirements/{slug}.md`）
 - **update**：按新素材 / 实现变化刷新一份已有需求文档
 
 为什么不允许一次写多份？需求文档的价值在于**每份都被读过**——一次吐多份 AI 起草稿，用户没精力逐份仔细 review，最后要么全部粗糙合入、要么全部放着不看。
@@ -60,8 +60,8 @@ description: 为项目起草或更新 `codestable/requirements/` 下的需求文
 
 确认三件事：
 
-- 模式（`new` / `update`）
-- 目标文档（new：新 slug + 一句话能力描述；update：已有文档路径）
+- 模式（`backfill` / `update`）
+- 目标文档（backfill：新 slug + 一句话能力描述 + 确认该能力在代码里已经存在；update：已有文档路径）
 - 本次覆盖的范围（整份 / 某几节）
 
 一份需求 doc 描述**一个能力**。用户说"把这个模块的需求全写了"时要先问清楚：这模块对外提供几个独立能力？每个独立能力一份 doc，不要把多个能力塞进同一份。
@@ -110,7 +110,7 @@ description: 为项目起草或更新 `codestable/requirements/` 下的需求文
 
 ### Phase 6：落盘 + 索引更新
 
-- new 模式：写入 `codestable/requirements/{slug}.md`，frontmatter `status: current`，`last_reviewed` 填当天
+- backfill 模式：写入 `codestable/requirements/{slug}.md`，frontmatter `status: current`，`last_reviewed` 填当天
 - update 模式：覆盖已有文件，`last_reviewed` 更新为当天；如果结构性改动大，在文档末尾 `变更日志` 节加一条"YYYY-MM-DD：{一句话描述}"
 - **索引更新**：如果 `codestable/requirements/` 下有 `README.md` 或索引文件，顺带加一行链接。没有就不强求——requirements 目前扁平，`ls` 本身就是索引
 
@@ -180,7 +180,7 @@ tags: []
 
 ## 退出条件
 
-- [ ] 已锁定单一模式（new / update）和单一目标文档
+- [ ] 已锁定单一模式（backfill / update）和单一目标文档
 - [ ] Phase 4 自查清单逐条跑过，并已汇报处理结果
 - [ ] 文档 frontmatter 完整，`doc_type: requirement`、`pitch`、`status`、`last_reviewed` 都填了
 - [ ] 正文四节齐全（用户故事 / 为什么需要 / 怎么解决 / 边界）
@@ -208,7 +208,8 @@ tags: []
 
 ## 常见错误
 
-- 把"打算做的事"写进来：req 是现状档案，没做的能力归 roadmap，不在这里起新 req
+- 把"打算做的事"写进来：req 是现状档案，没做的能力归 roadmap，不走 backfill
+- 走 backfill 时没先确认能力是否真的在代码里跑：凭用户一句话就写了一份"听起来合理"的 req
 - 写成 PRD 字段堆：读者要一格一格读才能拼出全貌
 - 语气像在上课："本能力旨在提供……"这种开头立刻扔掉
 - 标题用比喻："修 bug 时让 AI 当你的第一个读者" < "修 bug 时先探索和分析"

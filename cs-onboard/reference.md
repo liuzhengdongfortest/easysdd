@@ -2,7 +2,7 @@
 
 本文件提供 `cs-onboard` 使用的骨架模板。
 
-## 1. `codestable/architecture/DESIGN.md` 占位模板
+## 1. `codestable/architecture/ARCHITECTURE.md` 占位模板
 
 ```markdown
 # {项目名} 架构总入口

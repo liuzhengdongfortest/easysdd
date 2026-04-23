@@ -15,7 +15,7 @@ codestable/
 ├── requirements/          需求中心目录（"为什么要有这个能力"，只记现状）
 │   └── {slug}.md          一个能力一份，扁平（由 cs-req 产出）
 ├── architecture/          架构中心目录（"用什么结构实现"，只记现状）
-│   ├── DESIGN.md          架构总入口（索引 + 关键架构决定）
+│   ├── ARCHITECTURE.md    架构总入口（索引 + 关键架构决定）
 │   └── {slug}.md          子系统 / 模块架构 doc（由 cs-arch 产出）
 ├── roadmap/               规划层目录（"接下来打算怎么走"，独立于现状档案）
 │   └── {slug}/            一个大需求一个子目录（由 cs-roadmap 产出）
@@ -54,7 +54,7 @@ codestable/
 - issue 目录：`codestable/issues/YYYY-MM-DD-{slug}/`，日期用报告当天
 - refactor 目录：`codestable/refactors/YYYY-MM-DD-{slug}/`，日期用首次扫描当天
 - 沉淀类文档：`codestable/compound/YYYY-MM-DD-{doc_type}-{slug}.md`，日期用**归档当天**（不是问题发生当天）
-- 架构文档：`codestable/architecture/{type}-{slug}.md`（长效地图，不带日期前缀）；总入口始终叫 `DESIGN.md`
+- 架构文档：`codestable/architecture/{type}-{slug}.md`（长效地图，不带日期前缀）；总入口始终叫 `ARCHITECTURE.md`
 - `AGENTS.md` 在项目根目录，**不在 `codestable/` 里**
 
 ### 架构 doc 的分组规则（同类聚合）
@@ -67,7 +67,7 @@ codestable/
 
 **只升不降**：文档因删除回到 ≤5 份也不折回平铺，避免反复改一堆引用。
 
-**触发时谁负责**：`cs-arch` 的 `new` / `update` 模式在 Phase 6 落盘前主动检查；命中阈值时这次操作要把"本次新加 / 改的这份 + 已有同类全部"一起搬迁，并同步改 `DESIGN.md` 里所有相关链接（搬迁本身要在 Phase 5 一并给用户 review，不偷偷做）。`check` 模式不主动搬迁，但读 `architecture/` 时若发现某 type 已 ≥6 仍平铺，在报告末尾列为观察项交给用户。
+**触发时谁负责**：`cs-arch` 的 `backfill` / `update` 模式在 Phase 6 落盘前主动检查；命中阈值时这次操作要把"本次新加 / 改的这份 + 已有同类全部"一起搬迁，并同步改 `ARCHITECTURE.md` 里所有相关链接（搬迁本身要在 Phase 5 一并给用户 review，不偷偷做）。`check` 模式不主动搬迁，但读 `architecture/` 时若发现某 type 已 ≥6 仍平铺，在报告末尾列为观察项交给用户。
 
 ### 要改目录结构
 
