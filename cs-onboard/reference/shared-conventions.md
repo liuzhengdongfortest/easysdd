@@ -17,9 +17,10 @@ codestable/
 ├── architecture/          架构中心目录（"用什么结构实现"，只记现状）
 │   ├── ARCHITECTURE.md    架构总入口（索引 + 关键架构决定）
 │   └── {slug}.md          子系统 / 模块架构 doc（由 cs-arch 产出）
-├── roadmap/               规划层目录（"接下来打算怎么走"，独立于现状档案）
+├── roadmap/               规划层目录（"接下来打算怎么做这块大需求 + 模块怎么切 + 接口怎么定"，独立于现状档案）
 │   └── {slug}/            一个大需求一个子目录（由 cs-roadmap 产出）
-│       ├── {slug}-roadmap.md      主文档（背景 / 拆解 / 排期思路）
+│       ├── {slug}-roadmap.md      主文档：背景 / 范围 / 模块拆分（概设）/
+│       │                          接口契约（架构层详设）/ 子 feature 清单 / 排期思路
 │       ├── {slug}-items.yaml      机器可读的子 feature 清单，acceptance 回写状态
 │       └── drafts/                可选，草稿 / 调研 / 讨论
 ├── features/              feature spec 聚合根

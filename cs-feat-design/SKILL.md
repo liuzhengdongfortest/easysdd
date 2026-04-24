@@ -70,6 +70,8 @@ description: feature 流程的阶段 1——为新功能起草一份方案文件
    - 目标条目 `status` 必须是 `planned`——是 `in-progress` 说明 design 已经在做（回去续作）；是 `done` / `dropped` 停下来问用户
    - 目标条目的 `depends_on` 里的前置条目必须全部 `done`——有 `planned` / `in-progress` 的说明顺序错了，停下来告诉用户"前置 {X} 还没完成，建议先做它，或者确认要不要调整 roadmap 顺序"
    - 读主文档里这条的"备注"和整体"排期思路"，理解它在大需求里的定位
+   - **必读主文档第 3 节"模块拆分"**——确定本 feature 落在哪个模块下，把该模块的职责和边界抄进 design 第 1 节作为约束
+   - **必读主文档第 4 节"接口契约 / 共享协议"**——和本模块相关的接口（包括本模块对外提供的、本模块要消费别人的、共享数据结构）**都是本 feature 的硬约束输入**：design 必须照此实现，不能改。如果发现契约不合理 / 漏了 / 描述不准，停下来告诉用户"建议先回 `cs-roadmap update` 改 {具体哪一条}，再继续本 feature"，**不要在 design 里偷偷绕开或重定义**
 2. **slug 从 roadmap 取**——feature 目录命名 `YYYY-MM-DD-{roadmap 条目的 slug}`，日期用当天。不要另起 slug，否则 items.yaml 和 feature 对不上
 3. **建 feature 目录**，照常走"流程"一节
 4. **design frontmatter 额外带两个字段**：
